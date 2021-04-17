@@ -1,0 +1,140 @@
+"
+"      ██ ███████ ██     ██ 
+"      ██ ██      ██     ██  Jakob Ferdinand Wegenschimmel
+"      ██ █████   ██  █  ██  https://github.com/JakobFerdinand
+" ██   ██ ██      ██ ███ ██ 
+"  █████  ██       ███ ███  
+"
+" A customized vimrc
+"
+
+syntax enable
+
+set noerrorbells visualbell t_vb= 
+set clipboard=unnamedplus                       " Copy/paste between vim and other programs
+set tabstop=2 softtabstop=2
+set shiftwidth=2
+set expandtab
+set smartindent
+
+set number
+set relativenumber
+set nowrap
+
+" Dont create swapfiles - instead use undofiles in .vim/undodir
+set noswapfile
+set nobackup
+set undodir=~/.vim/undodir
+set undofile
+
+set hidden      " keep multiple buffers open
+
+set incsearch
+set showmatch
+
+"""
+"""
+""" vim-plug Plugin System Configuration
+"""
+"""
+
+" automatically install vim-plug
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin('~/.vim/plugged')
+
+" {{ The Basics }}
+Plug 'dracula/vim'                              " Dracula color scheme
+Plug 'itchyny/lightline.vim'                    " Lightline statusbar
+Plug 'szw/vim-maximizer'                        " Window Maximizer
+"{{ Syntax and languages }}
+Plug 'elmcast/elm-vim'                          " Elm highlighting
+" {{ Productivity }}
+Plug 'tpope/vim-fugitive'                       " Git client
+Plug 'mbbill/undotree'                          " Undotree
+Plug 'preservim/nerdtree'                       " Nerdtree - a visual filemanager in vim
+Plug 'ryanoasis/vim-devicons'                   " Icons for Nerdtree
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'  " Highlighting Nerdtree
+" {{ Junegunn Coi Plugins }}
+Plug 'junegunn/goyo.vim'                        " Distraction free writing
+
+call plug#end()
+
+"""""""""""""""""""""""""""""""""""""""
+" Colorize
+"""""""""""""""""""""""""""""""""""""""
+" Dracula Color Scheme
+colorscheme dracula
+" Status Line
+let g:lightline = {
+  \ 'colorscheme': 'dracula',
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ],
+  \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+  \ },
+  \ 'component_function': {
+  \   'gitbranch': 'FugitiveHead' 
+  \ }
+  \ }
+set noshowmode                                  " Disable vim default mode visualization
+set laststatus=2                                " required to show lightline
+
+""""""""""""""""""""""""""""""""""""""""
+" NERDTree
+""""""""""""""""""""""""""""""""""""""""
+map <leader><leader> :NERDTreeFocus<CR>
+let NERDTreeShowLineNumbers=1
+let NERDTreeShowHidden=1
+let g:NERDTreeWinSize=38
+let g:NERDTreeDirArrowExpandable = '►'
+let g:NERDTreeDirArrawCollapsible = '▼'
+set encoding=UTF-8                              " for vim-devicons
+autocmd VimEnter * source ~/.vim/vimrc          " remove [ ] around nerdtree icons
+if exists('g:loaded_webdevicons')
+  call webdevicons#refresh()
+endif
+
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
+  \ quit | endif
+
+""""""""""""""""""""""""""""""""""""""""
+" command remapping
+""""""""""""""""""""""""""""""""""""""""
+
+let mapleader = " "
+
+""""""""""""""""""""""""""""""""""""""""
+" Fugitive
+""""""""""""""""""""""""""""""""""""""""
+nnoremap <leader>gs :G<CR>
+nnoremap <leader>gc :Git commit<CR>
+nnoremap <leader>gp :Git pull<CR>
+nnoremap <leader>gpp :Git push<CR>
+
+""""""""""""""""""""""""""""""""""""""""
+" vim-maximizer
+""""""""""""""""""""""""""""""""""""""""
+nnoremap <leader>m :MaximizerToggle<CR>
+
+" navigating in windows
+nnoremap <leader>h :wincmd h<CR>
+nnoremap <leader>j :wincmd j<CR>
+nnoremap <leader>k :wincmd k<CR>
+nnoremap <leader>l :wincmd l<CR>
+
+" moving windows
+nnoremap <leader>H :wincmd H<CR>
+nnoremap <leader>J :wincmd J<CR>
+nnoremap <leader>K :wincmd K<CR>
+nnoremap <leader>L :wincmd L<CR>
+
+nnoremap <leader>u :UndotreeShow<CR>
+nnoremap <leader>t :belowright terminal<CR>
+nnoremap <leader>+ :vertical resize +5<CR>
+nnoremap <leader>- :vertical resize -5<CR>
+
+
