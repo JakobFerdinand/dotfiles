@@ -5,7 +5,7 @@
 " ██   ██ ██      ██ ███ ██ 
 "  █████  ██       ███ ███  
 "
-" A customized neovim configuration
+" A customized neovim configuration (https://neovim.io/)
 "
 
 
@@ -34,6 +34,13 @@ set tabstop=2 softtabstop=2                     " One tab == two spaces
 set shiftwidth=2
 set expandtab                                   " Use spaces instead of tabs
 set smartindent
+"
+" Dont create swapfiles - instead use undofiles in $datadir/undodir
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+set noswapfile
+set nobackup
+let &undodir=data_dir.'/undodir'
+set undofile
 
 """"""""""""""""""""""""""""""""""""""""
 " command remapping
@@ -71,7 +78,6 @@ set splitbelow splitright
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " automatically install vim-plug
-let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
   silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
@@ -93,6 +99,22 @@ Plug 'ryanoasis/vim-devicons'                   " Icons for Nerdtree
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'  " Highlighting Nerdtree
 
 call plug#end()
+
+"""""""""""""""""""""""""""""""""""""""
+" lightline
+""""""""""""""""""""""""""""""""""""""""
+  "\ 'colorscheme': 'dracula',
+let g:lightline = {
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ],
+  \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+  \ },
+  \ 'component_function': {
+  \   'gitbranch': 'FugitiveHead' 
+  \ }
+  \ }
+set noshowmode                                  " Disable vim default mode visualization
+set laststatus=2                                " required to show lightline
 
 """""""""""""""""""""""""""""""""""""""
 " vim-maximizer
@@ -136,3 +158,5 @@ autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTr
 
 
 set guifont=SauceCodePro\ Nerd\ Font:h15
+
+
