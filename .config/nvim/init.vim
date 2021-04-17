@@ -122,8 +122,8 @@ let NERDTreeShowHidden=1
 let g:NERDTreeWinSize=38
 let g:NERDTreeDirArrowExpandable = '►'
 let g:NERDTreeDirArrawCollapsible = '▼'
-set encoding=UTF-8                              " for vim-devicons
-autocmd VimEnter * source ~/.vim/vimrc          " remove [ ] around nerdtree icons
+set encoding=UTF-8                                  " for vim-devicons
+autocmd VimEnter * source ~/.config/nvim/init.vim   " remove [ ] around nerdtree icons
 if exists('g:loaded_webdevicons')
   call webdevicons#refresh()
 endif
