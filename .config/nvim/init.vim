@@ -86,17 +86,19 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " {{ The Basics }}
-" Plug 'dracula/vim'                              " Dracula color scheme
-Plug 'itchyny/lightline.vim'                    " Lightline statusbar
-Plug 'szw/vim-maximizer'                        " Window Maximizer
+" Plug 'dracula/vim'                                  " Dracula color scheme
+Plug 'itchyny/lightline.vim'                          " Lightline statusbar
+Plug 'szw/vim-maximizer'                              " Window Maximizer
 "{{ Syntax and languages }}
-Plug 'elmcast/elm-vim'                          " Elm highlighting
+Plug 'elmcast/elm-vim'                                " Elm highlighting
 " {{ Productivity }}
-Plug 'tpope/vim-fugitive'                       " Git client
-Plug 'mbbill/undotree'                          " Undotree
-Plug 'preservim/nerdtree'                       " Nerdtree - a visual filemanager in vim
-Plug 'ryanoasis/vim-devicons'                   " Icons for Nerdtree
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'  " Highlighting Nerdtree
+Plug 'tpope/vim-fugitive'                             " Git client
+Plug 'mbbill/undotree'                                " Undotree
+Plug 'preservim/nerdtree'                             " Nerdtree - a visual filemanager in vim
+Plug 'ryanoasis/vim-devicons'                         " Icons for Nerdtree
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'        " Highlighting Nerdtree
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }   " fuzzy finder
+Plug 'junegunn/fzf.vim'
 
 call plug#end()
 
@@ -152,6 +154,42 @@ endif
 
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
   \ quit | endif
+
+""""""""""""""""""""""""""""""""""""""""
+" FZF
+""""""""""""""""""""""""""""""""""""""""
+" This is the default extra key bindings
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
+" Enable per-command history.
+" CTRL-N and CTRL-P will be automatically bound to next-history and
+" previous-history instead of down and up. If you don't like the change,
+" explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
+let g:fzf_history_dir = '~/.local/share/fzf-history'
+
+map <C-f> :Files<CR>
+map <leader>b :Buffers<CR>
+nnoremap <leader>m :Marks<CR>
+
+" Customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
 
 
 
