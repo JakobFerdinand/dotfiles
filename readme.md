@@ -3,6 +3,13 @@
 Dotfiles are the configuration files for various tools and programs.
 Most of them start with a `.` - that´s why they are called `dotfiles`.
 
+## Tips and triks
+
+Prevent Git from showing all files.
+```
+%yourGitAlias% config status.showUntrackedFiles no
+```
+
 ## How to managed dotfiles
 
 I use a **git bare repository** to manage my dotfiles.  
