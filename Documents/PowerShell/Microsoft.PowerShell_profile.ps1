@@ -1,9 +1,20 @@
-# Set-PoshPrompt  ~/.poshthemes/jakobferdinand.omp.json
 
 Invoke-Expression (&starship init powershell)
 
-# Set-Alias --Name config --Value 'git.exe --git-dir=$HOME/dotfiles --work-tree=$HOME'
+Set-Alias -Name vim -Value nvim
 
 function config {
     git.exe --git-dir=$HOME/dotfiles --work-tree=$HOME $args
+}
+
+
+$prefix = "C:\Program Files (x86)\Microsoft Visual Studio\2019\"
+$postfix = "\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\TF.exe"
+
+if (Test-Path ($prefix + "Enterprise" + $postfix)) {
+    Set-Alias tf ($prefix + "Enterprise" + $postfix)
+} elseif (Test-Path ($prefix + "Professional" + $postfix)) {
+    Set-Alias tf ($prefix + "Professional" + $postfix)
+} elseif (Test-Path ($prefix + "Community" + $postfix)) {
+    Set-Alias tf ($prefix + "Community" + $postfix)
 }
