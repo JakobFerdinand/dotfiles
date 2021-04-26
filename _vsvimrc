@@ -1,0 +1,28 @@
+"
+"      ██ ███████ ██     ██ 
+"      ██ ██      ██     ██  Jakob Ferdinand Wegenschimmel
+"      ██ █████   ██  █  ██  https://github.com/JakobFerdinand
+" ██   ██ ██      ██ ███ ██ 
+"  █████  ██       ███ ███  
+"
+" A customized vsvimrc
+
+
+set clipboard=unnamed                       " Copy/paste between vim and other programs
+set ignorecase 
+set number
+set relativenumber
+set nowrap
+
+" set 'selection', 'selectmode', 'mousemodel' and 'keymodel' for MS-Windows
+behave mswin
+
+" backspace in Visual mode deletes selection
+vnoremap <BS> d
+
+map <Space>b :vsc Build.BuildSolution<CR>
+map <Space>kd :vsc Edit.FormatDocument<CR>
+map <Space>rg :vsc Edit.RemoveAndSort<CR>
+map <Space>kc :vsc Edit.CommentSelection<CR>
+map <Space>ku :vsc Edit.UncommentSelection<CR>
+map <Space>rr :vsc Refactor.Rename<CR>
