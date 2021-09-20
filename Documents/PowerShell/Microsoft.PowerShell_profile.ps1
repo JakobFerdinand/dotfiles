@@ -18,3 +18,5 @@ if (Test-Path ($prefix + "Enterprise" + $postfix)) {
 } elseif (Test-Path ($prefix + "Community" + $postfix)) {
     Set-Alias tf ($prefix + "Community" + $postfix)
 }
+
+Set-Alias nuget "C:\Tools\nuget.exe"

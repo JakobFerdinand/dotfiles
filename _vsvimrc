@@ -36,4 +36,4 @@ map <Space>fs :vsc File.SaveSelection<CR>
 map <Space>rr :vsc Refactor.Rename<CR>
 map <Space>gs :vsc View.GitWindow<CR>
 
-map <Space>em :normal @m
+map <Space>em :normal @m<CR>
