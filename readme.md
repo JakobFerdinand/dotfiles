@@ -10,14 +10,14 @@ Prevent Git from showing all files.
 %yourGitAlias% config status.showUntrackedFiles no
 ```
 
-## How to managed dotfiles
+## How to manage dotfiles
 
 I use a **git bare repository** to manage my dotfiles.  
 I found the idea on [Derek Taylor´s Youtube Channel](https://www.youtube.com/watch?v=tBoLDpTWVOM&t=905s). His [GitLab](https://gitlab.com/dwt1/dotfiles) page is also a great resource for configuration ideas.
 
 ## Zsh Configuration
 
-For using all tools and options configured in the `zsh configuration` some tools are needen.
+For using all tools and options configured in the `zsh configuration` some tools are needed.
 
 ### Go
 Go mainly is needed to install other tools.
