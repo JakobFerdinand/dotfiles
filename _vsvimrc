@@ -21,10 +21,19 @@ behave mswin
 vnoremap <BS> d
 
 map <Space>b :vsc Build.BuildSolution<CR>
+
 map <Space>f :vsc Edit.Find<CR>
-map <Space>kd :vsc Edit.FormatDocument<CR>
-map <Space>rg :vsc Edit.RemoveAndSort<CR>
+map <Space>h :vsc Edit.Replace<CR>
+map <Space>t :vsc Edit.NavigateTo<CR>
 map <Space>kc :vsc Edit.CommentSelection<CR>
+map <Space>kd :vsc Edit.FormatDocument<CR>
 map <Space>ku :vsc Edit.UncommentSelection<CR>
+map <Space>mp :vsc Edit.StopOutlining<CR>
+map <Space>rg :vsc Edit.RemoveAndSort<CR>
+
+map <Space>fs :vsc File.SaveSelection<CR>
+
 map <Space>rr :vsc Refactor.Rename<CR>
 map <Space>gs :vsc View.GitWindow<CR>
+
+map <Space>em :normal @m
