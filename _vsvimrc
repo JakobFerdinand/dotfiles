@@ -5,7 +5,8 @@
 " ██   ██ ██      ██ ███ ██ 
 "  █████  ██       ███ ███  
 "
-" A customized vsvimrc
+" A customized configuration file for VsVim - a free vim emulator for VisualStudio
+" http://github.com/VsVim/VsVim
 
 
 set clipboard=unnamed                       " Copy/paste between vim and other programs
