@@ -1,6 +1,10 @@
 
+# Ensure Starship is installed.
+# https://starship.rs/
 Invoke-Expression (&starship init powershell)
 
+# Ensure Nvim is installed.
+# https://github.com/neovim/neovim
 Set-Alias -Name vim -Value nvim
 
 function config {
