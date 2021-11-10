@@ -12,7 +12,7 @@ function config {
 }
 
 
-$prefix = "C:\Program Files (x86)\Microsoft Visual Studio\2019\"
+$prefix = "C:\Program Files\Microsoft Visual Studio\2022\"
 $postfix = "\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\TF.exe"
 
 if (Test-Path ($prefix + "Enterprise" + $postfix)) {
