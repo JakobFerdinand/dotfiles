@@ -21,6 +21,8 @@ behave mswin
 " backspace in Visual mode deletes selection
 vnoremap <BS> d
 
+map <Space>q :vsc Window.QuickLaunch<CR>
+
 map <Space>b :vsc Build.BuildSolution<CR>
 
 map <Space>f :vsc Edit.Find<CR>
