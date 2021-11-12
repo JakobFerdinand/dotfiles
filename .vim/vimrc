@@ -48,7 +48,7 @@ endif
 call plug#begin('~/.vim/plugged')
 
 " {{ The Basics }}
-Plug 'dracula/vim'                              " Dracula color scheme
+"Plug 'dracula/vim'                              " Dracula color scheme
 Plug 'itchyny/lightline.vim'                    " Lightline statusbar
 Plug 'szw/vim-maximizer'                        " Window Maximizer
 "{{ Syntax and languages }}
@@ -68,19 +68,19 @@ call plug#end()
 " Colorize
 """""""""""""""""""""""""""""""""""""""
 " Dracula Color Scheme
-colorscheme dracula
+"colorscheme dracula
 " Status Line
-let g:lightline = {
-  \ 'colorscheme': 'dracula',
-  \ 'active': {
-  \   'left': [ [ 'mode', 'paste' ],
-  \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-  \ },
-  \ 'component_function': {
-  \   'gitbranch': 'FugitiveHead' 
-  \ }
-  \ }
-set noshowmode                                  " Disable vim default mode visualization
+"let g:lightline = {
+"  \ 'colorscheme': 'dracula',
+"  \ 'active': {
+"  \   'left': [ [ 'mode', 'paste' ],
+"  \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+"  \ },
+"  \ 'component_function': {
+"  \   'gitbranch': 'FugitiveHead' 
+"  \ }
+"  \ }
+"set noshowmode                                  " Disable vim default mode visualization
 set laststatus=2                                " required to show lightline
 
 """"""""""""""""""""""""""""""""""""""""
