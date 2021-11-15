@@ -5,12 +5,19 @@ Invoke-Expression (&starship init powershell)
 
 # Ensure Nvim is installed.
 # https://github.com/neovim/neovim
-Set-Alias -Name vim -Value nvim
+Set-Alias vim nvim
 
 function config {
     git.exe --git-dir=$HOME/dotfiles --work-tree=$HOME $args
 }
 
+# PowerShell parameter completion shim for the dotnet CLI
+Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
+    param($commandName, $wordToComplete, $cursorPosition)
+        dotnet complete --position $cursorPosition "$wordToComplete" | ForEach-Object {
+           [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
+        }
+}
 
 $prefix = "C:\Program Files\Microsoft Visual Studio\2022\"
 $postfix = "\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\TF.exe"
