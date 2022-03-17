@@ -1,3 +1,4 @@
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 # Ensure Starship is installed.
 # https://starship.rs/
@@ -6,6 +7,7 @@ Invoke-Expression (&starship init powershell)
 # Ensure Nvim is installed.
 # https://github.com/neovim/neovim
 Set-Alias vim nvim
+$Env:homeDrive = [System.Environment]::ExpandEnvironmentVariables("$home")
 
 function config {
     git.exe --git-dir=$HOME/dotfiles --work-tree=$HOME $args
