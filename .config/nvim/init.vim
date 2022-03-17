@@ -190,11 +190,12 @@ let g:fzf_colors =
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
 
-
-
-
-
-
 set guifont=SauceCodePro\ Nerd\ Font:h15
 
 
+""""""""""""""""""""""""""""""""""""""""
+" Filetype mappings
+""""""""""""""""""""""""""""""""""""""""
+autocmd BufNewFile,BufRead *.csproj set filetype=xml
+autocmd BufNewFile,BufRead *.props set filetype=xml
+autocmd BufNewFile,BufRead *.targets set filetype=xml
