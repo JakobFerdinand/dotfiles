@@ -18,15 +18,15 @@ Checkout the the main branch.
 git --git-dir=$HOME/dotfiles --work-tree=$HOME checkout
 ```
 
+Prevent Git from showing all files.
+```
+config config status.showUntrackedFiles no
+```
+
 Now you have configured aliases for `zsh` and `powershell` and can work with the repository directly through the command `config`.
 Example:
 ```sh
 config commit -m "Updated readme.md"
-```
-
-Prevent Git from showing all files.
-```
-config config status.showUntrackedFiles no
 ```
 
 ## Zsh Configuration
