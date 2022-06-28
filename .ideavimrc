@@ -20,3 +20,4 @@ Plug 'preservim/nerdtree'
 :map <leader>b <Action>(BuildSolutionAction)
 :map <leader>e <Action>(ShowErrorDescription) "show error on current position
 :map <leader>pd <Action>(QuickImplementations) "peak definition
+:map <leader>t <Action>(SearchEverywhere)
