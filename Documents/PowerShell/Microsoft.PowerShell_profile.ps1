@@ -16,20 +16,38 @@ function config {
 # PowerShell parameter completion shim for the dotnet CLI
 Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
     param($commandName, $wordToComplete, $cursorPosition)
-        dotnet complete --position $cursorPosition "$wordToComplete" | ForEach-Object {
-           [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
-        }
+    dotnet complete --position $cursorPosition "$wordToComplete" | ForEach-Object {
+        [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
+    }
 }
 
-$prefix = "C:\Program Files\Microsoft Visual Studio\2022\"
-$postfix = "\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer\TF.exe"
+function getVSDir {
+    param (
+        [bool]$preview
+    )
 
-if (Test-Path ($prefix + "Enterprise" + $postfix)) {
-    Set-Alias tf ($prefix + "Enterprise" + $postfix)
-} elseif (Test-Path ($prefix + "Professional" + $postfix)) {
-    Set-Alias tf ($prefix + "Professional" + $postfix)
-} elseif (Test-Path ($prefix + "Community" + $postfix)) {
-    Set-Alias tf ($prefix + "Community" + $postfix)
+    $prefix = "C:\Program Files\Microsoft Visual Studio\2022\"
+    $postfix = "\Common7\IDE\"
+
+    if ($preview -eq 1 -and (Test-Path ($prefix + "Preview" + $postfix))) {
+        return $prefix + "Preview" + $postfix;
+    }
+    elseif (Test-Path ($prefix + "Enterprise" + $postfix)) {
+        return $prefix + "Enterprise" + $postfix;
+    }
+    elseif (Test-Path ($prefix + "Professional" + $postfix)) {
+        return $prefix + "Professional" + $postfix;
+    }
+    elseif (Test-Path ($prefix + "Community" + $postfix)) {
+        Set-Alias tf ($prefix + "Community" + $postfix)
+    }
 }
+
+$vsDir = getVSDir -preview 0
+$vsPreviewDir = getVSDir -preview 1
+
+Set-Alias tf ($vsDir + "CommonExtensions\Microsoft\TeamFoundation\Team Explorer\TF.exe")
+Set-Alias vs ($vsDir + "devenv.exe")
+Set-Alias vspreview ($vsPreviewDir + "devenv.exe")
 
 Set-Alias nuget "C:\Tools\nuget.exe"
