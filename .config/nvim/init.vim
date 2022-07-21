@@ -94,6 +94,7 @@ Plug 'itchyny/lightline.vim'                          " Lightline statusbar
 Plug 'szw/vim-maximizer'                              " Window Maximizer
 "{{ Syntax and languages }}
 Plug 'elmcast/elm-vim'                                " Elm highlighting
+Plug 'OmniSharp/omnisharp-vim'                        " C# support
 " {{ Productivity }}
 Plug 'tpope/vim-fugitive'                             " Git client
 Plug 'mbbill/undotree'                                " Undotree
