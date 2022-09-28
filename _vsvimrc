@@ -24,9 +24,15 @@ behave mswin
 " backspace in Visual mode deletes selection
 vnoremap <BS> d
 
+"
+" List of all commands can be found in
+" VS -> Tools -> Options -> Environment -> Keyboard
+"
+
 map <Space>q :vsc Window.QuickLaunch<CR>
 
 map <Space>b :vsc Build.BuildSolution<CR>
+map <Space>bc :vsc Build.BuildSelection<CR>
 
 map <Space>f :vsc Edit.Find<CR>
 map <Space>h :vsc Edit.Replace<CR>
