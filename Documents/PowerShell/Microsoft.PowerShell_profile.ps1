@@ -54,6 +54,7 @@ Set-Alias vs ($vsDir + "devenv.exe")
 Set-Alias vspreview ($vsPreviewDir + "devenv.exe")
 
 Set-Alias nuget "C:\Tools\nuget.exe"
+Set-Alias speedtest "C:\Tools\speedtest.exe"
 
 function defenderScan {
   Start-MpScan -ScanType FullScan

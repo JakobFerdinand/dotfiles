@@ -44,8 +44,15 @@ map <Space>mp :vsc Edit.StopOutlining<CR>
 map <Space>rg :vsc Edit.RemoveAndSort<CR>
 
 map <Space>fs :vsc File.SaveSelection<CR>
+map <Space>fd :vsc Edit.FormatDocument<CR>
+
+map <Space>ne :vsc View.NextError<CR>
 
 map <Space>rr :vsc Refactor.Rename<CR>
+
+map <Space>rt :vsc TestExplorer.RunAllTestsInContext<CR>
+map <Space>dt :vsc TestExplorer.DebugAllTestsInContext<CR>
+
 map <Space>gs :vsc View.GitWindow<CR>
 
 map <Space>em :normal @m<CR>
