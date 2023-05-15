@@ -55,6 +55,7 @@ Set-Alias vspreview ($vsPreviewDir + "devenv.exe")
 
 Set-Alias nuget "C:\Tools\nuget.exe"
 Set-Alias speedtest "C:\Tools\speedtest.exe"
+Set-Alias infosys "C:\tools\Infosys\Infosystem.lnk"
 
 function defenderScan {
   Start-MpScan -ScanType FullScan
