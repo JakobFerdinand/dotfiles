@@ -63,6 +63,10 @@ nnoremap <leader>J :wincmd J<CR>
 nnoremap <leader>K :wincmd K<CR>
 nnoremap <leader>L :wincmd L<CR>
 
+" resizing windows
+nnoremap <leader>+ :wincmd +<CR>
+nnoremap <leader>- :wincmd -<CR>
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Mouse Scrolling
@@ -92,6 +96,7 @@ call plug#begin('~/.vim/plugged')
 " Plug 'dracula/vim'                                  " Dracula color scheme
 Plug 'itchyny/lightline.vim'                          " Lightline statusbar
 Plug 'szw/vim-maximizer'                              " Window Maximizer
+Plug 'tpope/vim-surround'                             " Surround selections
 "{{ Syntax and languages }}
 Plug 'elmcast/elm-vim'                                " Elm highlighting
 Plug 'OmniSharp/omnisharp-vim'                        " C# support

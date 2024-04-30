@@ -1,0 +1,44 @@
+{
+	"analytics-uuid": "fae7e725-c8f8-4d96-aa0b-b8a55fe0221c",
+	"motd": {
+		"cloudBuildErrorAfter": 1594252800000,
+		"cloudBuildWarnAfter": 1590019200000,
+		"defaultNode10After": 1594252800000,
+		"minVersion": "3.0.5",
+		"node8DeploysDisabledAfter": 1613390400000,
+		"node8RuntimeDisabledAfter": 1615809600000,
+		"node8WarnAfter": 1600128000000,
+		"fetched": 1638286710058
+	},
+	"usage": true,
+	"user": {
+		"iss": "accounts.google.com",
+		"azp": "563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com",
+		"aud": "563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com",
+		"sub": "100736751306060193573",
+		"email": "j.wegenschimmel@gmail.com",
+		"email_verified": true,
+		"at_hash": "ZKmdSQ0Kt4-cpXDVidL7uQ",
+		"iat": 1638286727,
+		"exp": 1638290327
+	},
+	"tokens": {
+		"expires_at": 1638290471790,
+		"refresh_token": "1//03a5QcVkMfoH_CgYIARAAGAMSNwF-L9Ir1xVPq8H9xJhYLpfN5QyxJCecE-BGYUoTnvlauhVxGga_6_im1if1sVPIzUNoiE76Ozg",
+		"scopes": [
+			"email",
+			"https://www.googleapis.com/auth/cloud-platform",
+			"https://www.googleapis.com/auth/cloudplatformprojects.readonly",
+			"https://www.googleapis.com/auth/firebase",
+			"openid"
+		],
+		"access_token": "ya29.a0ARrdaM-jbPrZ27U1WN3-BwdWYkKjcG59yNBm4vBqubOCPJZibx2phmd6t5JLCYey3mMVshI7Egrw8l4QgOXULdby-K8s5FPCsg8TDyUbnbUgggCwcaC_YDJhBq6TI7bGYKA1mNDIizGGFo2O93gtDgw05TOhE5tZtXMu",
+		"expires_in": 3599,
+		"scope": "https://www.googleapis.com/auth/cloudplatformprojects.readonly https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/firebase openid https://www.googleapis.com/auth/userinfo.email",
+		"token_type": "Bearer",
+		"id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImQ0ZTA2Y2ViMjJiMDFiZTU2YzIxM2M5ODU0MGFiNTYzYmZmNWE1OGMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiNTYzNTg0MzM1ODY5LWZncmhnbWQ0N2JxbmVraWo1aThiNXByMDNobzg0OWU2LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiNTYzNTg0MzM1ODY5LWZncmhnbWQ0N2JxbmVraWo1aThiNXByMDNobzg0OWU2LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTAwNzM2NzUxMzA2MDYwMTkzNTczIiwiZW1haWwiOiJqLndlZ2Vuc2NoaW1tZWxAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiIzZkpnSWRadGhNMzlsSUpIdkEzTl93IiwiaWF0IjoxNjM4Mjg2ODcyLCJleHAiOjE2MzgyOTA0NzJ9.LibQZDZXnK7lbJIYRAs0bzCX1wtQBY93ShxAJ84XG_YGcHZVOk7yYxdde-mDyk1RDYhLv3fSTaBfU1HFOm-rVsLRE0Sv-x_Lq1vpssgvpRdKI7GmFHhxkEi24Gfe6-ZE5Vv6ebVd5jb8ngB8fBI9FEu3pIxTAGG19GGQPJdWGHFLMtzoP45xulyE4oWB3U-G0A0o5roKJxobcnlEU9lNU_CacSq03ITQX6cq7h-WzZN4VZStrZc38_TLHJr3NIZUqXHeyihB5Twj50QfaEVPpkO6CulfDa6tfdS4hYjdg-K4JgIOlOidLqKPhjVjVbmRj8DuPyIzXx2Q8bDbxmiAyw"
+	},
+	"activeProjects": {
+		"/home/jakob/repos/pauladesign": "pauladesign"
+	}
+}
