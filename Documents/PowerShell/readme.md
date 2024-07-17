@@ -4,7 +4,7 @@ For using the powershell configuration [Starship](https://github.com/starship/st
 
 On Windows:
 ```
-choco install starship
+winget install -e --id Starship.Starship
 ```
 
 > Add the following to the end of Microsoft.PowerShell_profile.ps1. You can check the location of this file by querying the $PROFILE variable in PowerShell. Typically the path is ~\Documents\PowerShell\Microsoft.PowerShell_profile.ps1 or ~/.config/powershell/Microsoft.PowerShell_profile.ps1 on -Nix.
