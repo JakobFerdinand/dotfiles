@@ -18,6 +18,10 @@ Checkout the the main branch.
 git --git-dir=$HOME/dotfiles --work-tree=$HOME checkout
 ```
 
+> [!TIP]  
+> If you are using Windows be sure to use Powershell Core.  
+> Follow the [instructions for Powershell](Documents/PowerShell/readme.md).
+
 Prevent Git from showing all files.
 ```
 config config status.showUntrackedFiles no
