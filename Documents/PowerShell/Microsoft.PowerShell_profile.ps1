@@ -15,6 +15,9 @@ $Env:homeDrive = [System.Environment]::ExpandEnvironmentVariables("$home")
 function config {
     git.exe --git-dir=$HOME/dotfiles --work-tree=$HOME $args
 }
+function lazyconfig {
+    lazygit -g $HOME/dotfiles -w $HOME $args
+}
 
 # PowerShell parameter completion shim for the dotnet CLI
 Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
@@ -56,7 +59,12 @@ Set-Alias vspreview ($vsPreviewDir + "devenv.exe")
 Set-Alias nuget "C:\Tools\nuget.exe"
 Set-Alias speedtest "C:\Tools\speedtest.exe"
 Set-Alias infosys "C:\tools\Infosys\Infosystem.lnk"
+Set-Alias lamdera "C:\tools\lamdera\lamdera.exe"
 
 function defenderScan {
   Start-MpScan -ScanType FullScan
+}
+
+function gitcleanup {
+    Get-ChildItem -Recurse -Filter '*.orig' | Remove-Item
 }
