@@ -1,0 +1,51 @@
+{
+	"$schema" : "https://aka.ms/winget-packages.schema.2.0.json",
+	"CreationDate" : "2024-09-25T15:15:18.755-00:00",
+	"Sources" : 
+	[
+		{
+			"Packages" : 
+			[
+				{"PackageIdentifier":"Brave.Brave"},
+				{"PackageIdentifier":"BurntSushi.ripgrep.MSVC"},
+				{"PackageIdentifier":"Canonical.Ubuntu.2404"},
+				{"PackageIdentifier":"Docker.DockerDesktop"},
+				{"PackageIdentifier":"EvanCzaplicki.Elm"},
+				{"PackageIdentifier":"Git.Git"},
+				{"PackageIdentifier":"GitHub.cli"},
+				{"PackageIdentifier":"Google.Chrome"},
+				{"PackageIdentifier":"JesseDuffield.lazygit"},
+				{"PackageIdentifier":"JohnMacFarlane.Pandoc"},
+				{"PackageIdentifier":"Microsoft.Azd"},
+				{"PackageIdentifier":"Microsoft.Azure.FunctionsCoreTools"},
+				{"PackageIdentifier":"Microsoft.AzureDataStudio"},
+				{"PackageIdentifier":"Microsoft.AzureCLI"},
+				{"PackageIdentifier":"Microsoft.PowerShell"},
+				{"PackageIdentifier":"Microsoft.PowerToys"},
+				{"PackageIdentifier":"Microsoft.SQLServerManagementStudio"},
+				{"PackageIdentifier":"Microsoft.Sysinternals.RDCMan"},
+				{"PackageIdentifier":"Microsoft.VisualStudio.2022.Professional"},
+				{"PackageIdentifier":"Microsoft.VisualStudioCode"},
+				{"PackageIdentifier":"Mozilla.Firefox"},
+				{"PackageIdentifier":"Neovim.Neovim"},
+				{"PackageIdentifier":"Notepad++.Notepad++"},
+				{"PackageIdentifier":"Obsidian.Obsidian"},
+				{"PackageIdentifier":"OpenJS.NodeJS.LTS"},
+				{"PackageIdentifier":"Postman.Postman"},
+				{"PackageIdentifier":"ScooterSoftware.BeyondCompare4"},
+				{"PackageIdentifier":"Sinew.Enpass"},
+				{"PackageIdentifier":"Starship.Starship"},
+				{"PackageIdentifier":"Terrastruct.D2"},
+				{"PackageIdentifier":"7zip.7zip"}
+			],
+			"SourceDetails" : 
+			{
+				"Argument" : "https://cdn.winget.microsoft.com/cache",
+				"Identifier" : "Microsoft.Winget.Source_8wekyb3d8bbwe",
+				"Name" : "winget",
+				"Type" : "Microsoft.PreIndexed.Package"
+			}
+		}
+	],
+	"WinGetVersion" : "1.8.1911"
+}
