@@ -2,7 +2,7 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 # Ensure Posh-git is installed.
 # PowerShellGet\Install-Module posh-git -Scope CurrentUser -Force
-Import-Module posh-git
+# Import-Module posh-git
 # Ensure Starship is installed.
 # https://starship.rs/
 Invoke-Expression (&starship init powershell)
