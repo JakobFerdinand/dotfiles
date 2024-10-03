@@ -56,6 +56,8 @@ Set-Alias tf ($vsDir + "CommonExtensions\Microsoft\TeamFoundation\Team Explorer\
 Set-Alias vs ($vsDir + "devenv.exe")
 Set-Alias vspreview ($vsPreviewDir + "devenv.exe")
 
+Set-Alias lg lazygit
+
 Set-Alias nuget "C:\Tools\nuget.exe"
 Set-Alias speedtest "C:\Tools\speedtest.exe"
 Set-Alias infosys "C:\tools\Infosys\Infosystem.lnk"
