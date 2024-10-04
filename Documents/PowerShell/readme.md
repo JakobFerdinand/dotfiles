@@ -7,6 +7,14 @@ To install the tools execute the following command:
 winget import --accept-package-agreements --accept-source-agreements -i .\tool-list.json
 ```
 
+## Neovim
+
+To use the provided config for [neovim](https://neovim.io/) add that symlinc.
+
+```sh
+New-Item -ItemType SymbolicLink -Path $env:LOCALAPPDATA\nvim -value $env:USERPROFILE\.config\nvim\
+```
+
 ## Helix Editor
 
 To use the provided config in [helix](https://helix-editor.com/) add that link.
