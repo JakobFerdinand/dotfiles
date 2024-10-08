@@ -10,5 +10,6 @@ return {
       keymap.set("n", "<leader>l", ":<C-U>TmuxNavigateRight<cr>", { desc = "Navigate Right" })
       keymap.set("n", "<leader>p", ":<C-U>TmuxNavigatePrevious<cr>", { desc = "Navigate Previous" })
     end
-  }
+  },
+  "github/copilot.vim"
 }
