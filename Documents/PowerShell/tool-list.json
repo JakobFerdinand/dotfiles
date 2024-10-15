@@ -11,6 +11,7 @@
 				{"PackageIdentifier":"Canonical.Ubuntu.2404"},
 				{"PackageIdentifier":"Docker.DockerDesktop"},
 				{"PackageIdentifier":"EvanCzaplicki.Elm"},
+        {"PackageIdentifier":"eza-community.eza"},
 				{"PackageIdentifier":"ezwinports.make"},
 				{"PackageIdentifier":"Git.Git"},
 				{"PackageIdentifier":"GitHub.cli"},
