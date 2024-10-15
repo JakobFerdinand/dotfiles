@@ -9,14 +9,17 @@
 " http://github.com/VsVim/VsVim
 
 
-set clipboard=unnamed                       " Copy/paste between vim and other programs
+set clipboard=unnamed " Copy/paste between vim and other programs
 set ignorecase 
+set smartcase
 set number
 set relativenumber
 set nowrap
 " Show a few lines of context around the cursor. Note that this makes the
 " text scroll if you mouse-click near the start or end of the window.
 set scrolloff=5
+set cursorline
+set signcolumn
 
 " set 'selection', 'selectmode', 'mousemodel' and 'keymodel' for MS-Windows
 behave mswin

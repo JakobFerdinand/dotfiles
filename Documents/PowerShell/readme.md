@@ -28,14 +28,6 @@ $binPath = "C:\tools\w64devkit\bin"
 [System.Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $binPath, [System.EnvironmentVariableTarget]::Machine)
 ```
 
-## Helix Editor
-
-To use the provided config in [helix](https://helix-editor.com/) add that link.
-
-```sh
-New-Item -ItemType HardLink -Path $env:APPDATA\helix\config.toml -value $env:USERPROFILE\.config\helix\config.toml
-```
-
 ## Starship
 
 Add the following to the end of Microsoft.PowerShell_profile.ps1. 
