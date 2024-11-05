@@ -6,12 +6,13 @@
 		{
 			"Packages" : 
 			[
+        		{"PackageIdentifier":"Byron.dua-cli"},
 				{"PackageIdentifier":"Brave.Brave"},
 				{"PackageIdentifier":"BurntSushi.ripgrep.MSVC"},
 				{"PackageIdentifier":"Canonical.Ubuntu.2404"},
 				{"PackageIdentifier":"Docker.DockerDesktop"},
 				{"PackageIdentifier":"EvanCzaplicki.Elm"},
-        {"PackageIdentifier":"eza-community.eza"},
+        		{"PackageIdentifier":"eza-community.eza"},
 				{"PackageIdentifier":"ezwinports.make"},
 				{"PackageIdentifier":"Git.Git"},
 				{"PackageIdentifier":"GitHub.cli"},
@@ -19,6 +20,7 @@
 				{"PackageIdentifier":"JesseDuffield.lazygit"},
 				{"PackageIdentifier":"JohnMacFarlane.Pandoc"},
 				{"PackageIdentifier":"junegunn.fzf"},
+        		{"PackageIdentifier":"icsharpcode.ILSpy"},
 				{"PackageIdentifier":"Microsoft.Azd"},
 				{"PackageIdentifier":"Microsoft.Azure.FunctionsCoreTools"},
 				{"PackageIdentifier":"Microsoft.AzureDataStudio"},
