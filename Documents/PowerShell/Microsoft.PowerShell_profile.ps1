@@ -52,11 +52,6 @@ function getVSDir {
 $vsDir = getVSDir -preview 0
 $vsPreviewDir = getVSDir -preview 1
 
-Remove-Item Alias:ls
-function ls {
-  eza --icons -a -l --group-directories-first --no-permissions --no-time --ignore-glob="dotfiles|.git"
-}
-
 Set-Alias tf ($vsDir + "CommonExtensions\Microsoft\TeamFoundation\Team Explorer\TF.exe")
 Set-Alias vs ($vsDir + "devenv.exe")
 Set-Alias vspreview ($vsPreviewDir + "devenv.exe")
@@ -74,4 +69,9 @@ function defenderScan {
 
 function gitcleanup {
     Get-ChildItem -Recurse -Filter '*.orig' | Remove-Item
+}
+
+Remove-Item Alias:ls
+function ls {
+  eza --icons -a -l --group-directories-first --no-permissions --no-time --ignore-glob=".git|dotfiles"
 }
