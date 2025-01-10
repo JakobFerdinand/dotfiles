@@ -73,5 +73,5 @@ function gitcleanup {
 
 Remove-Item Alias:ls
 function ls {
-  eza --icons -a -l --group-directories-first --no-permissions --no-time --ignore-glob=".git|dotfiles"
+    eza --icons -a -l --group-directories-first --no-permissions --no-time --ignore-glob=".git|dotfiles" $args
 }
