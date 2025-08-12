@@ -1,9 +1,9 @@
 if status is-interactive
-    # Commands to run in interactive sessions can go here
-end
+  # Commands to run in interactive sessions can go here
 
-function config --description 'git bare repo for dotfiles'
-    /usr/bin/git --git-dir="$HOME/dotfiles" --work-tree="$HOME" $argv
-end
-funcsave config
+  # bun
+  set --export BUN_INSTALL "$HOME/.bun"
+  set --export PATH $BUN_INSTALL/bin $PATH
 
+  set --export PATH /mnt/c/Users/Jakob.Wegenschimmel/AppData/Local/Programs/Microsoft\ VS\ Code/bin $PATH
+end
