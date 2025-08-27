@@ -2,7 +2,8 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 # Ensure Posh-git is installed.
 # PowerShellGet\Install-Module posh-git -Scope CurrentUser -Force
-# Import-Module posh-git
+Import-Module posh-git
+
 # Ensure Starship is installed.
 # https://starship.rs/
 Invoke-Expression (&starship init powershell)
@@ -11,6 +12,31 @@ Invoke-Expression (&starship init powershell)
 # https://github.com/neovim/neovim
 Set-Alias vim nvim
 $Env:homeDrive = [System.Environment]::ExpandEnvironmentVariables("$home")
+
+# Load bin's config and put all relevant dirs on PATH (per session)
+$cfgPath = "$HOME\.config\bin\config.json"
+if (Test-Path $cfgPath) {
+    $cfg = Get-Content $cfgPath -Raw | ConvertFrom-Json
+
+    # Collect candidate directories: default_path + each tool's directory
+    $candidates =
+        @($cfg.default_path) +
+        ($cfg.bins.PSObject.Properties.Value |
+            ForEach-Object { Split-Path -Path $_.path -Parent })
+
+    $existingDirs = $candidates |
+        Where-Object { $_ } |
+        ForEach-Object { $_.Trim() } |
+        Where-Object { Test-Path $_ } |
+        Select-Object -Unique
+
+    $current = $env:PATH -split ';'
+    foreach ($dir in $existingDirs) {
+        if (-not ($current | Where-Object { $_ -ieq $dir })) {
+            $env:PATH = "$dir;$env:PATH"
+        }
+    }
+}
 
 function config {
     git.exe --git-dir=$HOME/dotfiles --work-tree=$HOME $args
@@ -75,3 +101,9 @@ Remove-Item Alias:ls
 function ls {
     eza --icons -a -l --group-directories-first --no-permissions --no-time --ignore-glob=".git|dotfiles" $args
 }
+
+Remove-Item Alias:cat
+function cat {
+    bat --paging=never $args
+}
+

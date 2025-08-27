@@ -28,6 +28,14 @@ $binPath = "C:\tools\w64devkit\bin"
 [System.Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $binPath, [System.EnvironmentVariableTarget]::Machine)
 ```
 
+## Posh-git
+
+For Git autocomplete use Posh-git
+```
+Install-Module posh-git -Scope CurrentUser -Force
+
+```
+
 ## Starship
 
 Add the following to the end of Microsoft.PowerShell_profile.ps1. 
