@@ -2,6 +2,7 @@ return {
   "nvim-lua/plenary.nvim",
   {
     "christoomey/vim-tmux-navigator",
+    lazy = false,
     config = function()
       local keymap = vim.keymap
       keymap.set("n", "<leader>h", ":<C-U>TmuxNavigateLeft<cr>", { desc = "Navigate Left" })
