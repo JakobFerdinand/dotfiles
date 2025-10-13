@@ -699,6 +699,7 @@ require('lazy').setup({
           },
         },
         marksman = {},
+        roslyn = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -718,6 +719,12 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
       })
+      require('mason').setup {
+        registries = {
+          'github:mason-org/mason-registry',
+          'github:Crashdummyy/mason-registry',
+        },
+      }
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
