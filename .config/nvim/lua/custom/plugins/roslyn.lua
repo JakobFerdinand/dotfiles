@@ -16,6 +16,69 @@ return {
       win = nil,
       job = nil,
     }
+    local highlight_ns = vim.api.nvim_create_namespace 'roslyn_build_output'
+
+    local function is_float_win(win)
+      return vim.api.nvim_win_get_config(win).relative ~= ''
+    end
+
+    local function is_neo_tree_win(win)
+      if not win or not vim.api.nvim_win_is_valid(win) then
+        return false
+      end
+      local ok_buf, buf = pcall(vim.api.nvim_win_get_buf, win)
+      if not ok_buf or not vim.api.nvim_buf_is_valid(buf) then
+        return false
+      end
+      local ft = vim.api.nvim_buf_get_option(buf, 'filetype')
+      return type(ft) == 'string' and ft:match('^neo%-tree')
+    end
+
+    local function pick_split_target_window(original_win)
+      if original_win and vim.api.nvim_win_is_valid(original_win) and not is_float_win(original_win) and not is_neo_tree_win(original_win) then
+        return original_win
+      end
+
+      local previous = vim.fn.win_getid(vim.fn.winnr '#')
+      if previous ~= 0 and vim.api.nvim_win_is_valid(previous) and not is_float_win(previous) and not is_neo_tree_win(previous) then
+        return previous
+      end
+
+      for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        if not is_float_win(win) and not is_neo_tree_win(win) then
+          return win
+        end
+      end
+
+      return original_win
+    end
+
+    local function stop_active_job()
+      if not build_output.job then
+        return
+      end
+      local job = build_output.job
+      build_output.job = nil
+      local ok, closing = pcall(function()
+        return job:is_closing()
+      end)
+      if not ok then
+        closing = false
+      end
+      if not closing then
+        pcall(function()
+          job:kill 'sigterm'
+        end)
+      end
+    end
+
+    local function close_output_window()
+      stop_active_job()
+      if build_output.win and vim.api.nvim_win_is_valid(build_output.win) then
+        pcall(vim.api.nvim_win_close, build_output.win, true)
+      end
+      build_output.win = nil
+    end
 
     -- 🔍 Find the nearest file upwards matching any of the supplied extensions
     local function find_file_upwards_with_extension(exts)
@@ -60,7 +123,7 @@ return {
       return table.concat(parts, ' ')
     end
 
-    -- 🪟 Ensure the vertical output window exists (re-using if possible)
+    -- 🪟 Ensure the horizontal output window exists (re-using if possible)
     local function ensure_output_window(title, command_display)
       if build_output.buf and not vim.api.nvim_buf_is_valid(build_output.buf) then
         build_output.buf = nil
@@ -76,14 +139,37 @@ return {
         vim.api.nvim_buf_set_option(build_output.buf, 'bufhidden', 'hide')
         vim.api.nvim_buf_set_option(build_output.buf, 'swapfile', false)
         vim.api.nvim_buf_set_option(build_output.buf, 'filetype', 'roslynbuild')
+        vim.keymap.set('n', 'q', close_output_window, {
+          buffer = build_output.buf,
+          silent = true,
+          desc = 'Close build output pane',
+          nowait = true,
+        })
       end
 
       if not build_output.win then
-        local current_win = vim.api.nvim_get_current_win()
+        local original_win = vim.api.nvim_get_current_win()
+        local target_win = pick_split_target_window(original_win)
+
+        if target_win and vim.api.nvim_win_is_valid(target_win) then
+          vim.api.nvim_set_current_win(target_win)
+        else
+          target_win = original_win
+        end
+
+        if not target_win or not vim.api.nvim_win_is_valid(target_win) or is_neo_tree_win(target_win) then
+          -- Create a fresh window to host the build output without reusing Neo-tree.
+          vim.cmd 'botright vsplit'
+          target_win = vim.api.nvim_get_current_win()
+        end
+
         vim.cmd 'botright split'
         build_output.win = vim.api.nvim_get_current_win()
         vim.api.nvim_win_set_buf(build_output.win, build_output.buf)
-        vim.api.nvim_set_current_win(current_win)
+
+        if original_win and vim.api.nvim_win_is_valid(original_win) then
+          vim.api.nvim_set_current_win(original_win)
+        end
       else
         vim.api.nvim_win_set_buf(build_output.win, build_output.buf)
       end
@@ -93,9 +179,21 @@ return {
         ('$ ' .. command_display),
         '',
       }
+      vim.api.nvim_buf_clear_namespace(build_output.buf, highlight_ns, 0, -1)
       vim.api.nvim_buf_set_lines(build_output.buf, 0, -1, false, header)
 
       return build_output.buf
+    end
+
+    local function classify_highlight(line)
+      local lowered = line:lower()
+      if lowered:find('error', 1, true) or lowered:find('failed', 1, true) then
+        return 'ErrorMsg'
+      end
+      if lowered:find('warning', 1, true) then
+        return 'WarningMsg'
+      end
+      return nil
     end
 
     -- 📝 Append new lines to the output buffer (scheduled on the main loop)
@@ -107,7 +205,14 @@ return {
         if not vim.api.nvim_buf_is_valid(buf) then
           return
         end
+        local start_line = vim.api.nvim_buf_line_count(buf)
         vim.api.nvim_buf_set_lines(buf, -1, -1, false, lines)
+        for idx, line in ipairs(lines) do
+          local hl = classify_highlight(line)
+          if hl then
+            vim.api.nvim_buf_add_highlight(buf, highlight_ns, hl, start_line + idx - 1, 0, -1)
+          end
+        end
         local win = vim.fn.bufwinid(buf)
         if win ~= -1 then
           vim.api.nvim_win_call(win, function()
@@ -153,17 +258,7 @@ return {
 
     -- 🚀 Kick off the build and stream output into the dedicated window
     local function run_build(cmd, label)
-      if build_output.job then
-        local ok, closing = pcall(function()
-          return build_output.job:is_closing()
-        end)
-        if (ok and not closing) or not ok then
-          pcall(function()
-            build_output.job:kill 'sigterm'
-          end)
-        end
-      end
-      build_output.job = nil
+      stop_active_job()
 
       local command_display = join_command(cmd)
       local buf = ensure_output_window(('Building %s'):format(label), command_display)
