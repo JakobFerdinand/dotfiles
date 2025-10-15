@@ -15,8 +15,21 @@ return {
       buf = nil,
       win = nil,
       job = nil,
+      main_win = nil,
     }
     local highlight_ns = vim.api.nvim_create_namespace 'roslyn_build_output'
+
+    local function configure_output_buffer(buf)
+      local options = {
+        buftype = 'nofile',
+        bufhidden = 'hide',
+        swapfile = false,
+        filetype = 'roslynbuild',
+      }
+      for option, value in pairs(options) do
+        vim.api.nvim_buf_set_option(buf, option, value)
+      end
+    end
 
     local function is_float_win(win)
       return vim.api.nvim_win_get_config(win).relative ~= ''
@@ -53,6 +66,26 @@ return {
       return original_win
     end
 
+    local function is_build_output_win(win)
+      return build_output.win ~= nil and win == build_output.win
+    end
+
+    local function pick_edit_window()
+      local win = build_output.main_win
+      if win and vim.api.nvim_win_is_valid(win) and not is_float_win(win) and not is_neo_tree_win(win) and not is_build_output_win(win) then
+        return win
+      end
+
+      for _, candidate in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+        if not is_float_win(candidate) and not is_neo_tree_win(candidate) and not is_build_output_win(candidate) then
+          build_output.main_win = candidate
+          return candidate
+        end
+      end
+
+      return nil
+    end
+
     local function stop_active_job()
       if not build_output.job then
         return
@@ -80,7 +113,76 @@ return {
       build_output.win = nil
     end
 
-    -- 🔍 Find the nearest file upwards matching any of the supplied extensions
+    local function jump_to_location(location)
+      if not location or not location.file then
+        return
+      end
+
+      local target_win = pick_edit_window()
+      if not target_win or not vim.api.nvim_win_is_valid(target_win) then
+        vim.cmd 'botright vsplit'
+        target_win = vim.api.nvim_get_current_win()
+        if not target_win or not vim.api.nvim_win_is_valid(target_win) then
+          vim.notify('Unable to create window for build location.', vim.log.levels.ERROR)
+          return
+        end
+      end
+
+      build_output.main_win = target_win
+
+      local escaped = vim.fn.fnameescape(location.file)
+      local current_win = vim.api.nvim_get_current_win()
+      if current_win ~= target_win then
+        vim.api.nvim_set_current_win(target_win)
+      end
+
+      vim.cmd('edit ' .. escaped)
+
+      local row = math.max(location.row or 1, 1)
+      local col = math.max((location.col or 1) - 1, 0)
+      vim.api.nvim_win_set_cursor(target_win, { row, col })
+    end
+
+    local function extract_location_from_line(line)
+      if not line or line == '' then
+        return nil
+      end
+
+      -- Match absolute or relative path:line,column pattern produced by dotnet.
+      -- Example: path/to/file.cs(12,34): error CS0001: message
+      local file, row, col = line:match '^%s*(.-)%((%d+),(%d+)%)'
+      if not file then
+        file, row = line:match '^%s*(.-)%((%d+)%)'
+        if file then
+          col = '1'
+        end
+      end
+      if not file then
+        file, row, col = line:match '^%s*(.+):(%d+):(%d+)'
+      end
+      if not file then
+        file, row = line:match '^%s*(.+):(%d+)'
+        if file then
+          col = '1'
+        end
+      end
+
+      if not file then
+        return nil
+      end
+
+      local expanded = vim.fn.fnamemodify(file, ':p')
+      row = tonumber(row) or 1
+      col = tonumber(col) or 1
+
+      return {
+        file = expanded,
+        row = row,
+        col = col,
+      }
+    end
+
+    -- Find the nearest file upwards matching any of the supplied extensions
     local function find_file_upwards_with_extension(exts)
       if type(exts) == 'string' then
         exts = { exts }
@@ -110,7 +212,7 @@ return {
       return results[1]
     end
 
-    -- 🧵 Join a command list for display purposes
+    -- Join a command list for display purposes
     local function join_command(cmd)
       local parts = {}
       for _, part in ipairs(cmd) do
@@ -123,7 +225,7 @@ return {
       return table.concat(parts, ' ')
     end
 
-    -- 🪟 Ensure the horizontal output window exists (re-using if possible)
+    -- Ensure the horizontal output window exists (re-using if possible)
     local function ensure_output_window(title, command_display)
       if build_output.buf and not vim.api.nvim_buf_is_valid(build_output.buf) then
         build_output.buf = nil
@@ -135,15 +237,30 @@ return {
       if not build_output.buf then
         build_output.buf = vim.api.nvim_create_buf(false, true)
         vim.api.nvim_buf_set_name(build_output.buf, 'Roslyn Build Output')
-        vim.api.nvim_buf_set_option(build_output.buf, 'buftype', 'nofile')
-        vim.api.nvim_buf_set_option(build_output.buf, 'bufhidden', 'hide')
-        vim.api.nvim_buf_set_option(build_output.buf, 'swapfile', false)
-        vim.api.nvim_buf_set_option(build_output.buf, 'filetype', 'roslynbuild')
+        configure_output_buffer(build_output.buf)
         vim.keymap.set('n', 'q', close_output_window, {
           buffer = build_output.buf,
           silent = true,
           desc = 'Close build output pane',
           nowait = true,
+        })
+        vim.keymap.set('n', '<CR>', function()
+          local cursor = vim.api.nvim_win_get_cursor(0)
+          local line = vim.api.nvim_buf_get_lines(build_output.buf, cursor[1] - 1, cursor[1], false)[1]
+          local location = extract_location_from_line(line or '')
+          if not location then
+            vim.notify('Could not parse location from build output line.', vim.log.levels.WARN)
+            return
+          end
+          if not vim.loop.fs_stat(location.file) then
+            vim.notify(('File not found: %s'):format(location.file), vim.log.levels.ERROR)
+            return
+          end
+          jump_to_location(location)
+        end, {
+          buffer = build_output.buf,
+          silent = true,
+          desc = 'Open location from build output',
         })
       end
 
@@ -161,6 +278,10 @@ return {
           -- Create a fresh window to host the build output without reusing Neo-tree.
           vim.cmd 'botright vsplit'
           target_win = vim.api.nvim_get_current_win()
+        end
+
+        if target_win and vim.api.nvim_win_is_valid(target_win) then
+          build_output.main_win = target_win
         end
 
         vim.cmd 'botright split'
@@ -196,7 +317,7 @@ return {
       return nil
     end
 
-    -- 📝 Append new lines to the output buffer (scheduled on the main loop)
+    -- Append new lines to the output buffer (scheduled on the main loop)
     local function append_lines(buf, lines)
       if not lines or #lines == 0 then
         return
@@ -222,7 +343,7 @@ return {
       end)
     end
 
-    -- 🔊 Produce handlers that stream stdout/stderr into the output buffer
+    -- Produce handlers that stream stdout/stderr into the output buffer
     local function make_stream_handler(buf, prefix)
       prefix = prefix or ''
       local pending = ''
@@ -256,7 +377,7 @@ return {
       end
     end
 
-    -- 🚀 Kick off the build and stream output into the dedicated window
+    -- Kick off the build and stream output into the dedicated window
     local function run_build(cmd, label)
       stop_active_job()
 
@@ -277,34 +398,32 @@ return {
       end)
     end
 
-    -- 🧠 Helper: extract file name (without extension)
+    -- Helper: extract file name (without extension)
     local function get_name_from_path(path)
       return vim.fn.fnamemodify(path, ':t:r')
     end
 
-    -- ⚙️ Build current project (.csproj)
+    local function build_with_extensions(exts, not_found_message, label_template)
+      local path = find_file_upwards_with_extension(exts)
+      if not path then
+        vim.notify(not_found_message, vim.log.levels.WARN)
+        return
+      end
+      local name = get_name_from_path(path)
+      run_build({ 'dotnet', 'build', path }, label_template:format(name))
+    end
+
+    -- Build current project (.csproj)
     local function build_project()
-      local csproj = find_file_upwards_with_extension 'csproj'
-      if not csproj then
-        vim.notify('No .csproj file found in current or parent directories.', vim.log.levels.WARN)
-        return
-      end
-      local name = get_name_from_path(csproj)
-      run_build({ 'dotnet', 'build', csproj }, ("project '%s'"):format(name))
+      build_with_extensions('csproj', 'No .csproj file found in current or parent directories.', "project '%s'")
     end
 
-    -- ⚙️ Build entire solution (.sln or .slnx)
+    -- Build entire solution (.sln or .slnx)
     local function build_solution()
-      local sln = find_file_upwards_with_extension { 'sln', 'slnx' }
-      if not sln then
-        vim.notify('No .sln or .slnx file found in current or parent directories.', vim.log.levels.WARN)
-        return
-      end
-      local name = get_name_from_path(sln)
-      run_build({ 'dotnet', 'build', sln }, ("solution '%s'"):format(name))
+      build_with_extensions({ 'sln', 'slnx' }, 'No .sln or .slnx file found in current or parent directories.', "solution '%s'")
     end
 
-    -- ⌨️ Keymaps (with helpful descriptions)
+    -- Keymaps (with helpful descriptions)
     map('n', '<leader>bc', build_project, {
       noremap = true,
       silent = true,
