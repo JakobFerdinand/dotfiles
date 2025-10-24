@@ -9,5 +9,12 @@ if status is-interactive
     # tmux
     set -gx TMUX_TMPDIR /tmp
 
+    if is_wsl
+        # Set up Kerberos credentials cache
+        mkdir -p /tmp/krbcc/ccache/
+        chmod 700 /tmp/krbcc
+        set -x KRB5CCNAME DIR:/tmp/krbcc/ccache
+    end
+
     tmux attach
 end
