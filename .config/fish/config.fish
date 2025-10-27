@@ -6,9 +6,6 @@ if status is-interactive
 
     zoxide init fish | source
 
-    # tmux
-    set -gx TMUX_TMPDIR /tmp
-
     if is_wsl
         # Set up Kerberos credentials cache
         mkdir -p /tmp/krbcc/ccache/
@@ -16,5 +13,14 @@ if status is-interactive
         set -x KRB5CCNAME DIR:/tmp/krbcc/ccache
     end
 
-    tmux attach
+    # tmux
+    set -gx TMUX_TMPDIR /tmp
+
+    if not set -q TMUX
+        if tmux ls >/dev/null 2>&1
+            tmux attach
+        else
+            tmux new
+        end
+    end
 end
