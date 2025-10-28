@@ -447,6 +447,12 @@ return {
       desc = '[S]earch [R]eferences',
     })
 
+    map('n', '<leader>rr', vim.lsp.buf.rename, {
+      noremap = true,
+      silent = true,
+      desc = 'Rename symbol (C#)',
+    })
+
     -- Keymaps (with helpful descriptions)
     map('n', '<leader>bc', build_project, {
       noremap = true,
