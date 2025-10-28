@@ -429,6 +429,12 @@ return {
       desc = 'Go to definition (C#)',
     })
 
+    map('n', 'gi', vim.lsp.buf.implementation, {
+      noremap = true,
+      silent = true,
+      desc = 'Go to implementation (C#)',
+    })
+
     -- Keymaps (with helpful descriptions)
     map('n', '<leader>bc', build_project, {
       noremap = true,
