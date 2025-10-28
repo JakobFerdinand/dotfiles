@@ -441,6 +441,12 @@ return {
       desc = 'Code actions (C#)',
     })
 
+    map('n', '<leader>sr', vim.lsp.buf.references, {
+      noremap = true,
+      silent = true,
+      desc = '[S]earch [R]eferences',
+    })
+
     -- Keymaps (with helpful descriptions)
     map('n', '<leader>bc', build_project, {
       noremap = true,
