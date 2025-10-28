@@ -441,10 +441,10 @@ return {
       desc = 'Code actions (C#)',
     })
 
-    map('n', '<leader>sr', vim.lsp.buf.references, {
+    map('n', '<leader>fr', vim.lsp.buf.references, {
       noremap = true,
       silent = true,
-      desc = '[S]earch [R]eferences',
+      desc = 'Find references (C#)',
     })
 
     map('n', '<leader>rr', vim.lsp.buf.rename, {
