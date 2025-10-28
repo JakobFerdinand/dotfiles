@@ -423,6 +423,12 @@ return {
       build_with_extensions({ 'sln', 'slnx' }, 'No .sln or .slnx file found in current or parent directories.', "solution '%s'")
     end
 
+    map('n', 'gd', vim.lsp.buf.definition, {
+      noremap = true,
+      silent = true,
+      desc = 'Go to definition (C#)',
+    })
+
     -- Keymaps (with helpful descriptions)
     map('n', '<leader>bc', build_project, {
       noremap = true,
