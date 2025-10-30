@@ -4,6 +4,10 @@ if status is-interactive
     # VS Code
     set --export PATH /mnt/c/Users/Jakob.Wegenschimmel/AppData/Local/Programs/Microsoft\ VS\ Code/bin $PATH
 
+    if test -d $HOME/.dotnet/tools
+        set -x PATH $PATH $HOME/.dotnet/tools
+    end
+
     zoxide init fish | source
 
     if is_wsl
