@@ -1,14 +1,15 @@
+-- dap-csharp.lua
+-- C#/.NET debugging configuration with netcoredbg adapter
+-- Handles .csproj discovery, target framework detection, and launch profile loading
+
 return {
-  -- Debug Framework
   'mfussenegger/nvim-dap',
-  dependencies = {
-    'rcarriga/nvim-dap-ui',
-    'nvim-neotest/nvim-nio',
-  },
+  ft = 'cs',
   config = function()
     local dap = require 'dap'
 
     local mason_path = vim.fn.stdpath 'data' .. '/mason/packages/netcoredbg/netcoredbg'
+
     local function trim(s)
       if not s then
         return nil
@@ -241,14 +242,15 @@ return {
       }
     end
 
+    -- Configure netcoredbg adapter for both normal and unit test debugging
     local netcoredbg_adapter = {
       type = 'executable',
       command = mason_path,
       args = { '--interpreter=vscode' },
     }
 
-    dap.adapters.netcoredbg = netcoredbg_adapter -- needed for normal debugging
-    dap.adapters.coreclr = netcoredbg_adapter -- needed for unit test debugging
+    dap.adapters.netcoredbg = netcoredbg_adapter
+    dap.adapters.coreclr = netcoredbg_adapter
 
     local cs_config
 
@@ -305,8 +307,8 @@ return {
 
     dap.configurations.cs = { cs_config }
 
+    -- C# specific keymaps
     local map = vim.keymap.set
-
     local opts = { noremap = true, silent = true }
 
     map('n', '<F5>', "<Cmd>lua require'dap'.continue()<CR>", opts)
@@ -315,25 +317,8 @@ return {
     map('n', '<F10>', "<Cmd>lua require'dap'.step_over()<CR>", opts)
     map('n', '<F11>', "<Cmd>lua require'dap'.step_into()<CR>", opts)
     map('n', '<F8>', "<Cmd>lua require'dap'.step_out()<CR>", opts)
-    -- map("n", "<F12>", "<Cmd>lua require'dap'.step_out()<CR>", opts)
     map('n', '<leader>dr', "<Cmd>lua require'dap'.repl.open()<CR>", opts)
     map('n', '<leader>dl', "<Cmd>lua require'dap'.run_last()<CR>", opts)
     map('n', '<leader>dt', "<Cmd>lua require('neotest').run.run({strategy = 'dap'})<CR>", { noremap = true, silent = true, desc = 'debug nearest test' })
-
-    local dapui = require 'dapui'
-    --- open ui immediately when debugging starts
-    dap.listeners.after.event_initialized['dapui_config'] = function()
-      dapui.open()
-    end
-    dap.listeners.before.event_terminated['dapui_config'] = function()
-      dapui.close()
-    end
-    dap.listeners.before.event_exited['dapui_config'] = function()
-      dapui.close()
-    end
-
-    -- default configuration
-    dapui.setup()
   end,
-  event = 'VeryLazy',
 }
