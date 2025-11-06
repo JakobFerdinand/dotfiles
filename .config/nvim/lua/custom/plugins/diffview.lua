@@ -8,7 +8,17 @@ return {
       enhanced_diff_hl = true,
       view = {
         merge_tool = {
-          layout = 'diff3_horizontal', -- 3-way side-by-side
+          layout = 'diff4_mixed',
+          --[[
+                ┌────┬────┬────┐
+                │ A  │ D  │ C  │
+                │    │    │    │
+                ├────┴────┴────┤
+                │      B       │
+                │              │
+                └──────────────┘
+		]]
+          --
           disable_diagnostics = true,
         },
       },
