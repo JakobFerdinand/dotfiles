@@ -4,6 +4,11 @@ if status is-interactive
     # VS Code
     set --export PATH /mnt/c/Users/Jakob.Wegenschimmel/AppData/Local/Programs/Microsoft\ VS\ Code/bin $PATH
 
+    if test -e "$HOME/bin/"
+        set -x PATH $PATH "$HOME/bin" 
+    end
+ 
+
      if test -d $HOME/.dotnet/tools
          set -x PATH $PATH $HOME/.dotnet/tools
      end
@@ -12,7 +17,11 @@ if status is-interactive
         set -x DOTNET_ROOT "$HOME/.dotnet/"
         set -x PATH $DOTNET_ROOT $PATH
     end
- 
+	
+    if test -e "$HOME/.luarocks/bin/"
+        set -x PATH $PATH "$HOME/.luarocks/bin" 
+    end
+
      zoxide init fish | source
 
     if is_wsl
