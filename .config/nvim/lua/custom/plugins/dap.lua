@@ -1,19 +1,6 @@
-local function debug_net_test()
-  local ok, neotest = pcall(require, 'neotest')
-  if not ok then
-    vim.notify('neotest is not available for .NET debugging', vim.log.levels.WARN)
-    return
-  end
-  neotest.run.run { strategy = 'dap' }
-end
-
 return {
   'mfussenegger/nvim-dap',
   event = 'VeryLazy',
-  keys = {
-    { '<F6>', debug_net_test, desc = 'Debug nearest .NET test' },
-    { '<leader>dt', debug_net_test, desc = 'Debug nearest .NET test' },
-  },
   config = function()
     local dap = require 'dap'
 
