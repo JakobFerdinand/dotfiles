@@ -1,19 +1,29 @@
+local function debug_net_test()
+  local ok, neotest = pcall(require, 'neotest')
+  if not ok then
+    vim.notify('neotest is not available for .NET debugging', vim.log.levels.WARN)
+    return
+  end
+  neotest.run.run { strategy = 'dap' }
+end
+
 return {
-  -- Debug Framework
   'mfussenegger/nvim-dap',
-  dependencies = {
-    'rcarriga/nvim-dap-ui',
-    'nvim-neotest/nvim-nio',
+  event = 'VeryLazy',
+  keys = {
+    { '<F6>', debug_net_test, desc = 'Debug nearest .NET test' },
+    { '<leader>dt', debug_net_test, desc = 'Debug nearest .NET test' },
   },
   config = function()
     local dap = require 'dap'
 
     local mason_path = vim.fn.stdpath 'data' .. '/mason/packages/netcoredbg/netcoredbg'
-    local function trim(s)
-      if not s then
+
+    local function trim(value)
+      if not value then
         return nil
       end
-      return (s:gsub('^%s+', ''):gsub('%s+$', ''))
+      return (value:gsub('^%s+', ''):gsub('%s+$', ''))
     end
 
     local function find_nearest_csproj(start_dir)
@@ -40,14 +50,14 @@ return {
         return frameworks
       end
       for _, line in ipairs(lines) do
-        local single = line:match('<TargetFramework>%s*([^<%s]+)%s*</TargetFramework>')
+        local single = line:match '<TargetFramework>%s*([^<%s]+)%s*</TargetFramework>'
         if single then
           frameworks[#frameworks + 1] = trim(single)
           break
         end
-        local multi = line:match('<TargetFrameworks>%s*([^<]+)%s*</TargetFrameworks>')
+        local multi = line:match '<TargetFrameworks>%s*([^<]+)%s*</TargetFrameworks>'
         if multi then
-          for tfm in multi:gmatch('[^;]+') do
+          for tfm in multi:gmatch '[^;]+' do
             frameworks[#frameworks + 1] = trim(tfm)
           end
           break
@@ -89,7 +99,7 @@ return {
       end
 
       for _, path in ipairs(candidates) do
-        if path:match('[\\/][Dd]ebug[\\/]') and vim.fn.filereadable(path) == 1 then
+        if path:match '[\\/][Dd]ebug[\\/]' and vim.fn.filereadable(path) == 1 then
           return path
         end
       end
@@ -225,7 +235,7 @@ return {
       local cwd = project_dir
       if type(profile.workingDirectory) == 'string' and profile.workingDirectory ~= '' then
         local wd = profile.workingDirectory
-        if not wd:match('^%a:[\\/]') and not wd:match('^/') then
+        if not wd:match '^%a:[\\/]' and not wd:match '^/' then
           wd = project_dir .. '/' .. wd
         end
         local normalized = vim.fn.fnamemodify(wd, ':p')
@@ -247,93 +257,61 @@ return {
       args = { '--interpreter=vscode' },
     }
 
-    dap.adapters.netcoredbg = netcoredbg_adapter -- needed for normal debugging
-    dap.adapters.coreclr = netcoredbg_adapter -- needed for unit test debugging
+    dap.adapters.netcoredbg = netcoredbg_adapter
+    dap.adapters.coreclr = netcoredbg_adapter
 
-    local cs_config
-
-    cs_config = {
+    local cs_config = {
       type = 'coreclr',
       name = 'launch - netcoredbg',
       request = 'launch',
-      program = function()
-        local buf_path = vim.api.nvim_buf_get_name(0)
-        local default_path
-        local csproj_path
+    }
 
-        if buf_path and buf_path ~= '' then
-          local buf_dir = vim.fn.fnamemodify(buf_path, ':h')
-          csproj_path = find_nearest_csproj(buf_dir)
-          if csproj_path then
-            local candidates = build_candidate_paths(csproj_path)
-            default_path = pick_default_path(candidates)
+    cs_config.program = function()
+      local buf_path = vim.api.nvim_buf_get_name(0)
+      local default_path
+      local csproj_path
 
-            local profiles = load_launch_profiles(csproj_path)
-            local project_dir = vim.fn.fnamemodify(csproj_path, ':h')
-            cs_config.cwd = project_dir
-            if profiles then
-              local profile_name = select_launch_profile(csproj_path, profiles)
-              local setup = build_launch_setup(csproj_path, profiles, profile_name)
-              if setup then
-                cs_config.env = setup.env
-                cs_config.args = setup.args
-                cs_config.cwd = setup.cwd or project_dir
-              else
-                cs_config.env = nil
-                cs_config.args = nil
-              end
+      if buf_path and buf_path ~= '' then
+        local buf_dir = vim.fn.fnamemodify(buf_path, ':h')
+        csproj_path = find_nearest_csproj(buf_dir)
+        if csproj_path then
+          local candidates = build_candidate_paths(csproj_path)
+          default_path = pick_default_path(candidates)
+
+          local profiles = load_launch_profiles(csproj_path)
+          local project_dir = vim.fn.fnamemodify(csproj_path, ':h')
+          cs_config.cwd = project_dir
+          if profiles then
+            local profile_name = select_launch_profile(csproj_path, profiles)
+            local setup = build_launch_setup(csproj_path, profiles, profile_name)
+            if setup then
+              cs_config.env = setup.env
+              cs_config.args = setup.args
+              cs_config.cwd = setup.cwd or project_dir
             else
               cs_config.env = nil
               cs_config.args = nil
             end
+          else
+            cs_config.env = nil
+            cs_config.args = nil
           end
         end
+      end
 
-        if not csproj_path then
-          cs_config.cwd = vim.fn.getcwd()
-          cs_config.env = nil
-          cs_config.args = nil
-        end
+      if not csproj_path then
+        cs_config.cwd = vim.fn.getcwd()
+        cs_config.env = nil
+        cs_config.args = nil
+      end
 
-        if not default_path or default_path == '' then
-          default_path = vim.fn.getcwd() .. '/bin/Debug/net9.0/'
-        end
+      if not default_path or default_path == '' then
+        default_path = vim.fn.getcwd() .. '/bin/Debug/net9.0/'
+      end
 
-        return vim.fn.input('Path to dll: ', default_path, 'file')
-      end,
-    }
+      return vim.fn.input('Path to dll: ', default_path, 'file')
+    end
 
     dap.configurations.cs = { cs_config }
-
-    local map = vim.keymap.set
-
-    local opts = { noremap = true, silent = true }
-
-    map('n', '<F5>', "<Cmd>lua require'dap'.continue()<CR>", opts)
-    map('n', '<F6>', "<Cmd>lua require('neotest').run.run({strategy = 'dap'})<CR>", opts)
-    map('n', '<F9>', "<Cmd>lua require'dap'.toggle_breakpoint()<CR>", opts)
-    map('n', '<F10>', "<Cmd>lua require'dap'.step_over()<CR>", opts)
-    map('n', '<F11>', "<Cmd>lua require'dap'.step_into()<CR>", opts)
-    map('n', '<F8>', "<Cmd>lua require'dap'.step_out()<CR>", opts)
-    -- map("n", "<F12>", "<Cmd>lua require'dap'.step_out()<CR>", opts)
-    map('n', '<leader>dr', "<Cmd>lua require'dap'.repl.open()<CR>", opts)
-    map('n', '<leader>dl', "<Cmd>lua require'dap'.run_last()<CR>", opts)
-    map('n', '<leader>dt', "<Cmd>lua require('neotest').run.run({strategy = 'dap'})<CR>", { noremap = true, silent = true, desc = 'debug nearest test' })
-
-    local dapui = require 'dapui'
-    --- open ui immediately when debugging starts
-    dap.listeners.after.event_initialized['dapui_config'] = function()
-      dapui.open()
-    end
-    dap.listeners.before.event_terminated['dapui_config'] = function()
-      dapui.close()
-    end
-    dap.listeners.before.event_exited['dapui_config'] = function()
-      dapui.close()
-    end
-
-    -- default configuration
-    dapui.setup()
   end,
-  event = 'VeryLazy',
 }
