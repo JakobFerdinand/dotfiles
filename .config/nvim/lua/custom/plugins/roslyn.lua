@@ -44,7 +44,7 @@ return {
         return false
       end
       local ft = vim.api.nvim_buf_get_option(buf, 'filetype')
-      return type(ft) == 'string' and ft:match('^neo%-tree')
+      return type(ft) == 'string' and ft:match '^neo%-tree'
     end
 
     local function pick_split_target_window(original_win)
@@ -216,7 +216,7 @@ return {
     local function join_command(cmd)
       local parts = {}
       for _, part in ipairs(cmd) do
-        if part:find('%s') then
+        if part:find '%s' then
           parts[#parts + 1] = ('"%s"'):format(part)
         else
           parts[#parts + 1] = part
@@ -393,7 +393,7 @@ return {
         append_lines(buf, { '', ('%s (exit code %d)'):format(summary, obj.code) })
         vim.schedule(function()
           local level = obj.code == 0 and vim.log.levels.INFO or vim.log.levels.ERROR
-          vim.notify(("%s for %s"):format(summary, label), level)
+          vim.notify(('%s for %s'):format(summary, label), level)
         end)
       end)
     end
