@@ -708,6 +708,9 @@ require('lazy').setup({
         marksman = {},
         roslyn = {},
         gh_actions_ls = {},
+
+        astro = {},
+        prettier = {},
       }
 
       -- Ensure the servers and tools above are installed
