@@ -710,7 +710,9 @@ require('lazy').setup({
         gh_actions_ls = {},
 
         astro = {},
+        svelte = {},
         prettier = {},
+        mdx_analyzer = {},
       }
 
       -- Ensure the servers and tools above are installed
