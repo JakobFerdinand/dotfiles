@@ -17,10 +17,14 @@ if status is-interactive
         set -x DOTNET_ROOT "$HOME/.dotnet/"
         set -x PATH $DOTNET_ROOT $PATH
     end
-	
+
     if test -e "$HOME/.luarocks/bin/"
         set -x PATH $PATH "$HOME/.luarocks/bin" 
     end
+
+	# Neovim as default editor
+	# for example for opencode
+	set -x EDITOR "nvim"
 
      zoxide init fish | source
 
