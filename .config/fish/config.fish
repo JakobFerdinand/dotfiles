@@ -1,15 +1,48 @@
 if status is-interactive
-  # Commands to run in interactive sessions can go here
+    # Commands to run in interactive sessions can go here
 
-  # tmux
-  set -gx TMUX_TMPDIR /tmp
+    # VS Code
+    set --export PATH /mnt/c/Users/Jakob.Wegenschimmel/AppData/Local/Programs/Microsoft\ VS\ Code/bin $PATH
 
-  # bun
-  set --export BUN_INSTALL "$HOME/.bun"
-  set --export PATH $BUN_INSTALL/bin $PATH
+    if test -e "$HOME/bin/"
+        set -x PATH $PATH "$HOME/bin" 
+    end
+ 
 
-  # VS Code
-  set --export PATH /mnt/c/Users/Jakob.Wegenschimmel/AppData/Local/Programs/Microsoft\ VS\ Code/bin $PATH
+     if test -d $HOME/.dotnet/tools
+         set -x PATH $PATH $HOME/.dotnet/tools
+     end
 
-  tmux
+    if test -e "$HOME/.dotnet/dotnet"
+        set -x DOTNET_ROOT "$HOME/.dotnet/"
+        set -x PATH $DOTNET_ROOT $PATH
+    end
+
+    if test -e "$HOME/.luarocks/bin/"
+        set -x PATH $PATH "$HOME/.luarocks/bin" 
+    end
+
+	# Neovim as default editor
+	# for example for opencode
+	set -x EDITOR "nvim"
+
+     zoxide init fish | source
+
+    if is_wsl
+        # Set up Kerberos credentials cache
+        mkdir -p /tmp/krbcc/ccache/
+        chmod 700 /tmp/krbcc
+        set -x KRB5CCNAME DIR:/tmp/krbcc/ccache
+    end
+
+    # tmux
+    set -gx TMUX_TMPDIR /tmp
+
+    if not set -q TMUX
+        if tmux ls >/dev/null 2>&1
+            tmux attach
+        else
+            tmux new
+        end
+    end
 end
