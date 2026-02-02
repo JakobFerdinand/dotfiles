@@ -58,7 +58,7 @@ function getVSDir {
         [bool]$preview
     )
 
-    $prefix = "C:\Program Files\Microsoft Visual Studio\2022\"
+    $prefix = "C:\Program Files\Microsoft Visual Studio\18\"
     $postfix = "\Common7\IDE\"
 
     if ($preview -eq 1 -and (Test-Path ($prefix + "Preview" + $postfix))) {
@@ -107,3 +107,4 @@ function cat {
     bat --paging=never $args
 }
 
+Invoke-Expression (& { (zoxide init powershell | Out-String) })
