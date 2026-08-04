@@ -36,13 +36,13 @@ if status is-interactive
     end
 
     # tmux
-    set -gx TMUX_TMPDIR /tmp
-
-    if not set -q TMUX
-        if tmux ls >/dev/null 2>&1
-            tmux attach
-        else
-            tmux new
-        end
-    end
+#      set -gx TMUX_TMPDIR /tmp
+#
+#    if not set -q TMUX
+#        if tmux ls >/dev/null 2>&1
+#            tmux attach
+#        else
+#            tmux new
+#        end
+#    end
 end
