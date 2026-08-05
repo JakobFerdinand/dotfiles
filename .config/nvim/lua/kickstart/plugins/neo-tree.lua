@@ -23,6 +23,14 @@ return {
       window = {
         mappings = {
           ['\\'] = 'close_window',
+          ['y'] = function()
+            local state = require 'neo-tree.sources.manager'.get_state('filesystem')
+            local node = state.tree and state.tree:get_node()
+            if node then
+              vim.fn.setreg('+', node.name)
+              vim.notify('Copied: ' .. node.name, vim.log.levels.INFO)
+            end
+          end,
         },
       },
     },
