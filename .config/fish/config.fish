@@ -7,11 +7,14 @@ if status is-interactive
     if test -e "$HOME/bin/"
         set -x PATH $PATH "$HOME/bin" 
     end
- 
 
-     if test -d $HOME/.dotnet/tools
+    if test -e "$HOME/.local/bin/"
+        set -x PATH $PATH "$HOME/.local/bin" 
+    end
+
+    if test -d $HOME/.dotnet/tools
          set -x PATH $PATH $HOME/.dotnet/tools
-     end
+    end
 
     if test -e "$HOME/.dotnet/dotnet"
         set -x DOTNET_ROOT "$HOME/.dotnet/"
