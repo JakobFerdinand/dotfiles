@@ -150,6 +150,10 @@ window_rules:
     match:
       - window_title: { equals: "US_keyboard.png" } 
 
+  - commands: ['set-floating  --centered=false']
+    match:
+      - window_process: { equals: 'devenv' }
+
   - commands: ['ignore']
     match:
       # Ignores any Zebar windows.
