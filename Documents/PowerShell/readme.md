@@ -28,6 +28,17 @@ $binPath = "C:\tools\w64devkit\bin"
 [System.Environment]::SetEnvironmentVariable("Path", $Env:Path + ";" + $binPath, [System.EnvironmentVariableTarget]::Machine)
 ```
 
+## yazi
+
+```sh
+winget install sxyazi.yazi
+# Install the optional dependencies (recommended):
+winget install Gyan.FFmpeg 7zip.7zip jqlang.jq oschwartz10612.Poppler sharkdp.fd BurntSushi.ripgrep.MSVC junegunn.fzf ajeetdsouza.zoxide ImageMagick.ImageMagick
+```
+[Installation Documentation](https://yazi-rs.github.io/docs/installation/#install-with-winget)
+
+[Install git plugin](https://github.com/yazi-rs/plugins/tree/main/git.yazi)
+
 ## Posh-git
 
 For Git autocomplete use Posh-git

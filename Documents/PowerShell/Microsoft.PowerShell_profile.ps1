@@ -108,3 +108,33 @@ function cat {
 }
 
 Invoke-Expression (& { (zoxide init powershell | Out-String) })
+
+# yazi wrapper to change working directory after command execution
+if (Get-Command yazi.exe -ErrorAction SilentlyContinue) {
+	function y {
+		$tmp = (New-TemporaryFile).FullName
+		yazi.exe @args --cwd-file="$tmp"
+		$cwd = Get-Content -Path $tmp -Encoding UTF8
+		if ($cwd -and $cwd -ne $PWD.Path -and (Test-Path -LiteralPath $cwd -PathType Container)) {
+			Set-Location -LiteralPath (Resolve-Path -LiteralPath $cwd).Path
+		}
+		Remove-Item -Path $tmp
+	}
+
+	# Ensure yazi can find file.exe if git is installed in localappdata
+	$fileExe = "$env:LOCALAPPDATA\Programs\Git\usr\bin\file.exe"
+	if (Test-Path $fileExe) {
+		$env:YAZI_FILE_ONE = $fileExe
+		[Environment]::SetEnvironmentVariable(
+			"YAZI_FILE_ONE",
+			$fileExe,
+			"User"
+		)
+	}
+
+    [Environment]::SetEnvironmentVariable(
+        "YAZI_CONFIG_HOME",
+        "$HOME\.config\yazi",
+        "User"
+    )
+}
