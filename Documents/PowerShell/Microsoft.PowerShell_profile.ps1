@@ -45,7 +45,13 @@ function config {
     git.exe --git-dir=$HOME/dotfiles --work-tree=$HOME $args
 }
 function lazyconfig {
-    lazygit -g $HOME/dotfiles -w $HOME $args
+    lazygit -g $HOME/dotfiles -w $HOME @args
+}
+function lc {
+    lazyconfig @args
+}
+function ghs {
+    gh auth switch @args
 }
 
 # PowerShell parameter completion shim for the dotnet CLI
