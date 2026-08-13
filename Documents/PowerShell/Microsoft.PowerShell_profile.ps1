@@ -11,7 +11,10 @@ Invoke-Expression (&starship init powershell)
 # Ensure Nvim is installed.
 # https://github.com/neovim/neovim
 Set-Alias vim nvim
-$Env:homeDrive = [System.Environment]::ExpandEnvironmentVariables("$home")
+$userHome = [Environment]::GetFolderPath('UserProfile')
+$env:HOME = $userHome
+$env:HOMEDRIVE = [IO.Path]::GetPathRoot($userHome).TrimEnd('\')
+$env:HOMEPATH = $userHome.Substring($env:HOMEDRIVE.Length)
 
 # Load bin's config and put all relevant dirs on PATH (per session)
 $cfgPath = "$HOME\.config\bin\config.json"
@@ -97,12 +100,16 @@ function gitcleanup {
     Get-ChildItem -Recurse -Filter '*.orig' | Remove-Item
 }
 
-Remove-Item Alias:ls
+if (Test-Path Alias:ls) {
+    Remove-Item Alias:ls
+}
 function ls {
     eza --icons -a -l --group-directories-first --no-permissions --no-time --ignore-glob=".git|dotfiles" $args
 }
 
-Remove-Item Alias:cat
+if (Test-Path Alias:cat) {
+    Remove-Item Alias:cat
+}
 function cat {
     bat --paging=never $args
 }
@@ -137,4 +144,8 @@ if (Get-Command yazi.exe -ErrorAction SilentlyContinue) {
         "$HOME\.config\yazi",
         "User"
     )
+}
+
+if (Get-Command herdr -ErrorAction SilentlyContinue) {
+    $env:HERDR_CONFIG_PATH = "$HOME\.config\herdr\config.toml"
 }
