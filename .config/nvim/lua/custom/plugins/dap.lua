@@ -2,7 +2,39 @@ return {
   'mfussenegger/nvim-dap',
   event = 'VeryLazy',
   config = function()
+    require('dapui').setup {
+      controls = {
+        enabled = false, -- winbar control buttons; avoids the E5108 nil-element crash
+      },
+    }
     local dap = require 'dap'
+
+    -- colored debugger signs (VS-like)
+    local breakpoint_icons = {
+      DapBreakpoint = { text = '●', hl = 'DapBreak', numhl = 'DapBreak' },
+      DapBreakpointCondition = { text = '●', hl = 'DapBreakCondition', numhl = 'DapBreakCondition' },
+      DapBreakpointRejected = { text = '○', hl = 'DapBreakRejected', numhl = 'DapBreakRejected' },
+      DapLogPoint = { text = '◆', hl = 'DapLogPoint', numhl = 'DapLogPoint' },
+      DapStopped = { text = '▶', hl = 'DapStop', linehl = 'debugPC', numhl = 'DapStop' },
+    }
+    for name, opts in pairs(breakpoint_icons) do
+      vim.fn.sign_define(name, {
+        text = opts.text,
+        texthl = opts.hl,
+        linehl = opts.linehl or '',
+        numhl = opts.numhl or '',
+      })
+    end
+
+    local function set_breakpoint_highlights()
+      vim.api.nvim_set_hl(0, 'DapBreak', { fg = '#e51400' }) -- VS red
+      vim.api.nvim_set_hl(0, 'DapBreakCondition', { fg = '#e1b14a' }) -- amber
+      vim.api.nvim_set_hl(0, 'DapBreakRejected', { fg = '#6b7280' }) -- grey
+      vim.api.nvim_set_hl(0, 'DapLogPoint', { fg = '#e1b14a' }) -- amber
+      vim.api.nvim_set_hl(0, 'DapStop', { fg = '#98c379' }) -- green arrow
+    end
+    set_breakpoint_highlights()
+    vim.api.nvim_create_autocmd('ColorScheme', { callback = set_breakpoint_highlights })
 
     local mason_path = vim.fn.stdpath 'data' .. '/mason/packages/netcoredbg/netcoredbg'
 
@@ -299,6 +331,16 @@ return {
       return vim.fn.input('Path to dll: ', default_path, 'file')
     end
 
-    dap.configurations.cs = { cs_config }
+    dap.configurations.cs = {
+      cs_config,
+      {
+        type = 'coreclr',
+        name = 'attach - netcoredbg (Azure Functions worker)',
+        request = 'attach',
+        processId = function()
+          return require('dap.utils').pick_process()
+        end,
+      },
+    }
   end,
 }
