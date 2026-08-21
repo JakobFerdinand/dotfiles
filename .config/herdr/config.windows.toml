@@ -8,6 +8,9 @@ onboarding = false
 name = "terminal"
 auto_switch = false
 
+[terminal]
+default_shell = "pwsh.exe"
+
 [keys]
 prefix = "ctrl+space"
 
