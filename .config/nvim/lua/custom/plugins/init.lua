@@ -4,6 +4,12 @@
 -- See the kickstart.nvim README for more information
 return {
   'christoomey/vim-tmux-navigator',
+  -- vim-herdr-navigation (sourced below) is linux/macos-only; on Windows its
+  -- <C-h/j/k/l> bindings would swallow those keys. Native Windows has no tmux
+  -- either, so skip the whole spec there (WSL still reports Linux).
+  enabled = function()
+    return vim.uv.os_uname().sysname ~= 'Windows_NT'
+  end,
   lazy = false,
   init = function()
     vim.g.tmux_navigator_no_mappings = 1
