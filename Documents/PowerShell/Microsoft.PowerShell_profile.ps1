@@ -153,5 +153,5 @@ if (Get-Command yazi.exe -ErrorAction SilentlyContinue) {
 }
 
 if (Get-Command herdr -ErrorAction SilentlyContinue) {
-    $env:HERDR_CONFIG_PATH = "$HOME\.config\herdr\config.toml"
+    $env:HERDR_CONFIG_PATH = "$HOME\.config\herdr\config.windows.toml"
 }

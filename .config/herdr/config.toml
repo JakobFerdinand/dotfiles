@@ -1,3 +1,8 @@
+# Linux/macOS config, read from the default ~/.config/herdr/config.toml path.
+# Windows uses config.windows.toml via HERDR_CONFIG_PATH: the
+# [[keys.command]] plugin_action bindings below don't work there.
+# Common settings are duplicated in config.windows.toml - keep both in sync.
+
 onboarding = false
 [theme]
 name = "terminal"

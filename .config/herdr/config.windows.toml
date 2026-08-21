@@ -1,0 +1,15 @@
+# Windows variant of config.toml: no vim-herdr-navigation keybindings
+# (that plugin is linux/macos-only and its ctrl+h/j/k/l bindings would
+# swallow those keys on Windows). Point HERDR_CONFIG_PATH at this file.
+# Common settings are duplicated in config.toml - keep both in sync.
+
+onboarding = false
+[theme]
+name = "terminal"
+auto_switch = false
+
+[keys]
+prefix = "ctrl+space"
+
+[ui]
+agent_panel_sort = "spaces"
