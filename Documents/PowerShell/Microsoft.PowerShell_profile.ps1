@@ -53,6 +53,13 @@ function lc {
 function ghs {
     gh auth switch @args
 }
+function v {
+    if ($args) {
+        nvim @args
+    } else {
+        nvim .
+    }
+}
 
 # PowerShell parameter completion shim for the dotnet CLI
 Register-ArgumentCompleter -Native -CommandName dotnet -ScriptBlock {
