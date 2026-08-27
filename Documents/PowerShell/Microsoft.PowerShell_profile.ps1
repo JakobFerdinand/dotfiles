@@ -16,6 +16,11 @@ $env:HOME = $userHome
 $env:HOMEDRIVE = [IO.Path]::GetPathRoot($userHome).TrimEnd('\')
 $env:HOMEPATH = $userHome.Substring($env:HOMEDRIVE.Length)
 
+$localBinPath = Join-Path $userHome '.local\bin'
+if ($localBinPath -notin ($env:PATH -split ';')) {
+    $env:PATH = "$localBinPath;$env:PATH"
+}
+
 # Load bin's config and put all relevant dirs on PATH (per session)
 $cfgPath = "$HOME\.config\bin\config.json"
 if (Test-Path $cfgPath) {
