@@ -29,6 +29,12 @@ if status is-interactive
 	# for example for opencode
 	set -x EDITOR "nvim"
 
+    # Podman (WSL): expose the Docker-compatible socket for tools like
+    # Testcontainers that only look for DOCKER_HOST.
+    if test -S /mnt/wsl/podman-sockets/podman-machine-default/podman-user.sock
+        set -x DOCKER_HOST unix:///mnt/wsl/podman-sockets/podman-machine-default/podman-user.sock
+    end
+
      zoxide init fish | source
 
     if is_wsl
