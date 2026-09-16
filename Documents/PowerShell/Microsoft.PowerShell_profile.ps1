@@ -2,11 +2,34 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 # Ensure Posh-git is installed.
 # PowerShellGet\Install-Module posh-git -Scope CurrentUser -Force
-Import-Module posh-git
+#
+# Lazy-load: posh-git's own prompt gets overwritten by starship below anyway,
+# so importing it at startup only buys git tab-completion. Defer the ~470ms
+# Import-Module cost to the first Tab-press after "git "/"tgit "/"gitk "
+# instead of paying it on every shell startup.
+Register-ArgumentCompleter -Native -CommandName git, tgit, gitk -ScriptBlock {
+    param($wordToComplete, $commandAst, $cursorPosition)
+    Import-Module posh-git
+    (TabExpansion2 $commandAst.ToString() $cursorPosition).CompletionMatches
+}
 
 # Ensure Starship is installed.
 # https://starship.rs/
-Invoke-Expression (&starship init powershell)
+# Cache the generated init script; only regenerate when starship.exe is newer
+# than the cache (spawning starship.exe + Invoke-Expression every session was
+# costing ~225ms of shell startup time).
+$starshipCacheDir = "$env:LOCALAPPDATA\pwsh-cache"
+$starshipCache = Join-Path $starshipCacheDir 'starship_init.ps1'
+$starshipExe = (Get-Command starship -ErrorAction SilentlyContinue).Source
+if ($starshipExe) {
+    if (-not (Test-Path $starshipCache) -or (Get-Item $starshipExe).LastWriteTime -gt (Get-Item $starshipCache).LastWriteTime) {
+        New-Item -ItemType Directory -Force -Path $starshipCacheDir | Out-Null
+        # --print-full-init: `starship init powershell` alone just emits a stub
+        # that re-invokes starship.exe every session; this gives the real script.
+        & starship init powershell --print-full-init | Set-Content -Path $starshipCache -Encoding utf8
+    }
+    . $starshipCache
+}
 
 # Ensure Nvim is installed.
 # https://github.com/neovim/neovim
@@ -132,7 +155,17 @@ function cat {
     bat --paging=never $args
 }
 
-Invoke-Expression (& { (zoxide init powershell | Out-String) })
+# Cache zoxide's init script the same way as starship above.
+$zoxideCacheDir = "$env:LOCALAPPDATA\pwsh-cache"
+$zoxideCache = Join-Path $zoxideCacheDir 'zoxide_init.ps1'
+$zoxideExe = (Get-Command zoxide -ErrorAction SilentlyContinue).Source
+if ($zoxideExe) {
+    if (-not (Test-Path $zoxideCache) -or (Get-Item $zoxideExe).LastWriteTime -gt (Get-Item $zoxideCache).LastWriteTime) {
+        New-Item -ItemType Directory -Force -Path $zoxideCacheDir | Out-Null
+        zoxide init powershell | Set-Content -Path $zoxideCache -Encoding utf8
+    }
+    . $zoxideCache
+}
 
 # yazi wrapper to change working directory after command execution
 if (Get-Command yazi.exe -ErrorAction SilentlyContinue) {
@@ -150,18 +183,23 @@ if (Get-Command yazi.exe -ErrorAction SilentlyContinue) {
 	$fileExe = "$env:LOCALAPPDATA\Programs\Git\usr\bin\file.exe"
 	if (Test-Path $fileExe) {
 		$env:YAZI_FILE_ONE = $fileExe
-		[Environment]::SetEnvironmentVariable(
-			"YAZI_FILE_ONE",
-			$fileExe,
-			"User"
-		)
+		if ([Environment]::GetEnvironmentVariable("YAZI_FILE_ONE", "User") -ne $fileExe) {
+			[Environment]::SetEnvironmentVariable(
+				"YAZI_FILE_ONE",
+				$fileExe,
+				"User"
+			)
+		}
 	}
 
-    [Environment]::SetEnvironmentVariable(
-        "YAZI_CONFIG_HOME",
-        "$HOME\.config\yazi",
-        "User"
-    )
+    $yaziConfigHome = "$HOME\.config\yazi"
+    if ([Environment]::GetEnvironmentVariable("YAZI_CONFIG_HOME", "User") -ne $yaziConfigHome) {
+        [Environment]::SetEnvironmentVariable(
+            "YAZI_CONFIG_HOME",
+            $yaziConfigHome,
+            "User"
+        )
+    }
 }
 
 if (Get-Command herdr -ErrorAction SilentlyContinue) {
