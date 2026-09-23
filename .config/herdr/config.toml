@@ -5,7 +5,7 @@
 
 onboarding = false
 [theme]
-name = "terminal"
+name = "catppuccin-latte"
 auto_switch = false
 
 [keys]
