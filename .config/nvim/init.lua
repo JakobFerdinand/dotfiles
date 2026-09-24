@@ -901,13 +901,87 @@ require('lazy').setup({
     },
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
+  {
+    'tinted-theming/tinted-nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
+    lazy = false,
+    init = function()
+      -- Set this before tinted-nvim applies highlights; changing it afterwards resets some groups.
+      vim.o.background = 'light'
+    end,
+    opts = {
+      default_scheme = 'base16-custom-tango-light',
+      styles = {
+        comments = { italic = false },
+      },
+      schemes = {
+        ['base16-custom-tango-light'] = {
+          variant = 'light',
+          base00 = '#ffffff',
+          base01 = '#eeeeec',
+          base02 = '#d3d7cf',
+          base03 = '#888a85',
+          base04 = '#555753',
+          base05 = '#2e3436',
+          base06 = '#000000',
+          base07 = '#000000',
+          base08 = '#cc0000',
+          base09 = '#f57900',
+          base0A = '#c4a000',
+          base0B = '#4e9a06',
+          base0C = '#06989a',
+          base0D = '#3465a4',
+          base0E = '#75507b',
+          base0F = '#8f5902',
+        },
+      },
+      highlights = {
+        overrides = function(palette)
+          return {
+            -- Keep editor chrome close to the white terminal background.
+            Normal = { fg = palette.base05, bg = palette.base00 },
+            NormalNC = { fg = palette.base05, bg = palette.base00 },
+            NormalFloat = { fg = palette.base05, bg = palette.base00 },
+            FloatBorder = { fg = palette.base02, bg = palette.base00 },
+            WinSeparator = { fg = palette.base02 },
+            CursorLine = { bg = '#f7f7f6' },
+            LineNr = { fg = palette.base03 },
+            SignColumn = { fg = palette.base03, bg = palette.base00 },
+            FoldColumn = { fg = palette.base03, bg = palette.base00 },
+            StatusLine = { fg = palette.base05, bg = palette.base01 },
+            StatusLineNC = { fg = palette.base03, bg = palette.base01 },
+
+            -- Use light, colored backgrounds instead of dark terminal palette slots.
+            Visual = { bg = '#dce9f7' },
+            Search = { fg = palette.base05, bg = '#fce94f' },
+            IncSearch = { fg = palette.base05, bg = '#fcaf3e' },
+            Pmenu = { fg = palette.base05, bg = palette.base00 },
+            PmenuSel = { fg = palette.base05, bg = '#dce9f7' },
+            DiffAdd = { bg = '#e6f4df' },
+            DiffChange = { bg = '#e8f1fa' },
+            DiffDelete = { fg = palette.base08, bg = '#f9e5e5' },
+            DiffText = { bg = '#c9def4', bold = true },
+
+            -- Keep the statusline useful without turning it into a dark bar.
+            MiniStatuslineModeNormal = { fg = palette.base00, bg = palette.base0D, bold = true },
+            MiniStatuslineModeInsert = { fg = palette.base00, bg = palette.base0B, bold = true },
+            MiniStatuslineModeVisual = { fg = palette.base00, bg = palette.base0E, bold = true },
+            MiniStatuslineModeReplace = { fg = palette.base00, bg = palette.base08, bold = true },
+            MiniStatuslineModeCommand = { fg = palette.base00, bg = palette.base0F, bold = true },
+            MiniStatuslineDevinfo = { fg = palette.base04, bg = palette.base01 },
+            MiniStatuslineFilename = { fg = palette.base05, bg = palette.base00 },
+            MiniStatuslineFileinfo = { fg = palette.base04, bg = palette.base01 },
+            MiniStatuslineInactive = { fg = palette.base03, bg = palette.base01 },
+          }
+        end,
+      },
+    },
+  },
+
+  { -- Keep Tokyo Night installed so it remains available through `:Telescope colorscheme`.
+    'folke/tokyonight.nvim',
+    priority = 999,
+    lazy = false,
     config = function()
       ---@diagnostic disable-next-line: missing-fields
       require('tokyonight').setup {
@@ -915,11 +989,6 @@ require('lazy').setup({
           comments = { italic = false }, -- Disable italics in comments
         },
       }
-
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight'
     end,
   },
 
