@@ -34,6 +34,8 @@ if ($starshipExe) {
 # Ensure Nvim is installed.
 # https://github.com/neovim/neovim
 Set-Alias vim nvim
+$env:VISUAL = "nvim"
+$env:EDITOR = "nvim"
 $userHome = [Environment]::GetFolderPath('UserProfile')
 $env:HOME = $userHome
 $env:HOMEDRIVE = [IO.Path]::GetPathRoot($userHome).TrimEnd('\')
