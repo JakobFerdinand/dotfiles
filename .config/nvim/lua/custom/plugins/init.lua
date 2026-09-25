@@ -15,6 +15,12 @@ return {
     vim.g.tmux_navigator_no_mappings = 1
   end,
   config = function()
-    dofile(vim.fn.expand '~/.config/herdr/plugins/vim-herdr-navigation/editor/nvim.lua')
+    -- herdr stores the plugin checkout in a hash-suffixed directory under
+    -- plugins/github/, so resolve the editor script dynamically instead of
+    -- hardcoding a path that changes on every plugin reinstall.
+    local script = vim.split(vim.fn.glob '~/.config/herdr/plugins/github/vim-herdr-navigation-*/editor/nvim.lua', '\n')[1]
+    if script ~= '' then
+      dofile(script)
+    end
   end,
 }
