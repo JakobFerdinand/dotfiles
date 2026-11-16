@@ -1,3 +1,9 @@
+[opener]
+edit = [
+    { run = "nvim %s", block = true, desc = "Neovim", for = "windows" },
+    { run = "code %s", orphan = true, desc = "VS Code", for = "windows" },
+]
+
 [[plugin.prepend_fetchers]]
 url   = "*"
 run   = "git"
